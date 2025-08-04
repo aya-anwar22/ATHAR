@@ -1,0 +1,113 @@
+<div class="main-content-wrapper" *ngIf="dashboardData">
+  <div class="main-content">
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Dashboard Overview</h1>
+        <p class="dashboard-subtitle">Welcome back! Here's what's happening with your store today.</p>
+      </div>
+
+      <div class="row summary-cards">
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="summary-card sales-card">
+            <div class="card-icon">
+              <i class="bi bi-currency-dollar"></i>
+            </div>
+            <div class="card-content">
+              <h3 class="card-value">${{ dashboardData.totalSales }}</h3>
+              <p class="card-label">Total Sales</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="summary-card orders-card">
+            <div class="card-icon">
+              <i class="bi bi-cart-check"></i>
+            </div>
+            <div class="card-content">
+              <h3 class="card-value">{{ dashboardData.totalOrders }}</h3>
+              <p class="card-label">Total Orders</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="summary-card customers-card">
+            <div class="card-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="card-content">
+              <h3 class="card-value">{{ dashboardData.totalCustomers }}</h3>
+              <p class="card-label">Customers</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="summary-card products-card">
+            <div class="card-icon">
+              <i class="bi bi-box-seam"></i>
+            </div>
+            <div class="card-content">
+              <h3 class="card-value">{{ dashboardData.totalProducts }}</h3>
+              <p class="card-label">Products</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row data-tables">
+        <div class="col-lg-6 mb-4">
+          <div class="data-card">
+            <div class="card-header">
+              <h3>Recent Orders</h3>
+              <a href="/admin/orders" class="view-all">View All</a>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let order of dashboardData.recentOrders">
+                    <td>{{ order._id }}</td>
+                    <td>{{ order.userId.userName }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>${{ getTotalAmount(order) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="data-card">
+            <div class="card-header">
+              <h3>Top Selling Products</h3>
+              <a href="/admin/products" class="view-all">View All</a>
+            </div>
+            <div class="card-body">
+              <div *ngFor="let product of dashboardData.topProducts" class="product-item d-flex mb-3">
+                <div class="product-image me-3">
+                  <img [src]="product.productImages[0]" [alt]="product.productName" style="width: 80px; height: 80px; object-fit: cover;">
+                </div>
+                <div class="product-info">
+                  <h4>{{ product.productName }}</h4>
+                  <p class="sales-count">
+                    {{ product.soldCount || 'N/A' }} sold this month
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>

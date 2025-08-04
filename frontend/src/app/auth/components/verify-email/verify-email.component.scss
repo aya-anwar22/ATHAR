@@ -1,0 +1,146 @@
+/* Email Verification Section */
+.verify-email-section {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  background-size: cover;
+  background-position: center;
+  padding: 2rem 0;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .row {
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+  }
+
+  h2 {
+    color: #198754;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: #198754;
+    }
+  }
+
+  form {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      transform: translateY(-5px);
+    }
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    height: 50px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: #198754;
+      box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    }
+
+    &::placeholder {
+      color: #adb5bd;
+    }
+  }
+
+  .btn-success {
+    background-color: #198754;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: #157347;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+
+    form {
+      padding: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    .form-control {
+      height: 45px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    form {
+      padding: 1.25rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+/* Animation for verification process */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.verifying {
+  animation: pulse 1.5s infinite;
+}

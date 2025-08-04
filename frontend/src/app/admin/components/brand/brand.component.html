@@ -1,0 +1,61 @@
+<h2 class="text-center mb-4">{{ isEditing ? 'Update' : 'Create' }} Brand</h2>
+
+<form (ngSubmit)="submitForm()" enctype="multipart/form-data" class="border p-3 rounded mb-4 bg-light shadow-sm">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Brand Name</label>
+      <input type="text" [(ngModel)]="brandName" name="brandName" class="form-control" placeholder="Enter brand name" />
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Brand Image</label>
+      <input type="file" (change)="onFileSelected($event)" class="form-control" />
+    </div>
+  </div>
+  <div class="text-end">
+    <button type="submit" class="btn btn-success me-2">{{ isEditing ? 'Update' : 'Create' }}</button>
+    <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
+  </div>
+</form>
+
+<button class="btn btn-outline-primary mb-3" (click)="toggleDeleted()">
+  {{ isDeleted ? 'Show Active Brands' : 'Show Deleted Brands' }}
+</button>
+
+<div class="row">
+  <div class="col-md-4 mb-4" *ngFor="let brand of brands">
+    <div class="card h-100">
+      <img [src]="brand.brandImage" class="card-img-top" [alt]="brand.brandName" height="200" />
+      <div class="card-body">
+        <h5 class="card-title">{{ brand.brandName }}</h5>
+        <p class="card-text">Slug: {{ brand.brandSlug }}</p>
+        <button *ngIf="!isDeleted" class="btn btn-warning btn-sm me-2" (click)="updateBrand(brand)">
+          Edit
+        </button>
+        <button *ngIf="!isDeleted" class="btn btn-danger btn-sm" (click)="deleteBrand(brand._id)">
+          Delete
+        </button>
+        <button *ngIf="isDeleted" class="btn btn-success btn-sm" (click)="restoreBrand(brand._id)">
+          Restore
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="mt-4" *ngIf="totalPages > 1">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <button class="page-link" (click)="goToPage(currentPage - 1)">Previous</button>
+    </li>
+    <li
+      class="page-item"
+      *ngFor="let p of [].constructor(totalPages); let i = index"
+      [class.active]="i + 1 === currentPage"
+    >
+      <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
+    </li>
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <button class="page-link" (click)="goToPage(currentPage + 1)">Next</button>
+    </li>
+  </ul>
+</nav>

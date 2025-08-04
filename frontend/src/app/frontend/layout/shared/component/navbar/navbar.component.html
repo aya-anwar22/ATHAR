@@ -1,0 +1,73 @@
+<nav class="main-navbar navbar navbar-expand-lg navbar-light bg-white border-bottom">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">
+      <img src="loopstyle-logo.jpg" alt="LoopStyle" height="40" class="footer-logo" />
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="categoryDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Categories
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+            <li *ngFor="let category of categories">
+             <a
+            class="dropdown-item"
+            [routerLink]="['/products']"
+            [queryParams]="{ category: category._id }"
+            >{{ category.categoryName }}</a
+>
+
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="categories" (click)="openAllCategories(); $event.preventDefault()"
+                >All Categories</a
+              >
+
+            </li>
+          </ul>
+        </li>
+      <li class="nav-item"><a class="nav-link" href="">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="products">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="orders">Your orders</a></li>
+
+      </ul>
+
+
+<div class="navbar-actions d-flex align-items-center">
+  <a (click)="goToCart()" class="cart-icon position-relative" style="cursor: pointer;">
+    <i class="bi bi-bag"></i>
+    <span *ngIf="cartItemCount > 0"
+          class="cart-badge badge bg-success position-absolute top-0 start-100 translate-middle">
+      {{ cartItemCount }}
+    </span>
+  </a>
+
+</div>
+
+    </div>
+  </div>
+</nav>

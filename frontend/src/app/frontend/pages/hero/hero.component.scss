@@ -1,0 +1,282 @@
+// Hero Carousel Styles
+#heroCarousel {
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  .carousel-inner {
+    height: 100%;
+    
+    .carousel-item {
+      height: 100%;
+      transition: transform 0.6s ease-in-out;
+      
+      .hero {
+        height: 100%;
+        padding: 0 5%;
+        
+        .content-area {
+          width: 45%;
+          padding-right: 2rem;
+          
+          .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+          }
+          
+          .hero-subtitle {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+          }
+          
+          .btn-shop-now {
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+            
+            &:hover {
+              background-color: #c0392b;
+              transform: translateY(-3px);
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+          }
+        }
+        
+        .image-area {
+          width: 50%;
+          position: relative;
+          
+          .hero-image {
+            max-height: 70vh;
+            object-fit: contain;
+            animation: float 3s ease-in-out infinite;
+          }
+          
+          .offer-text {
+            position: absolute;
+            top: 20%;
+            right: -5%;
+            background-color: #e74c3c;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+            animation: pulse 2s infinite;
+            
+            h3 {
+              font-size: 1rem;
+              margin-bottom: 0.2rem;
+              font-weight: 600;
+            }
+            
+            p {
+              font-size: 1.5rem;
+              font-weight: 700;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%;
+    opacity: 1;
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      background-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    &:hover {
+      .carousel-control-prev-icon,
+      .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+  
+  .carousel-indicators {
+    bottom: 20px;
+    
+    button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+      
+      &.active {
+        background-color: #e74c3c;
+        width: 30px;
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Responsive Styles
+@media (max-width: 1200px) {
+  #heroCarousel {
+    height: 70vh;
+    
+    .carousel-inner .carousel-item .hero {
+      .content-area {
+        .hero-title {
+          font-size: 3rem;
+        }
+        .hero-subtitle {
+          font-size: 1.3rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  #heroCarousel {
+    height: 60vh;
+    
+    .carousel-inner .carousel-item .hero {
+      flex-direction: column;
+      text-align: center;
+      padding-top: 3rem;
+      
+      .content-area {
+        width: 100%;
+        padding-right: 0;
+        margin-bottom: 2rem;
+        
+        .hero-title {
+          font-size: 2.5rem;
+        }
+      }
+      
+      .image-area {
+        width: 80%;
+        
+        .offer-text {
+          right: 0;
+          top: -10%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  #heroCarousel {
+    height: 50vh;
+    
+    .carousel-inner .carousel-item .hero {
+      .content-area {
+        .hero-title {
+          font-size: 2rem;
+        }
+        .hero-subtitle {
+          font-size: 1.1rem;
+        }
+      }
+      
+      .image-area {
+        .offer-text {
+          width: 90px;
+          height: 90px;
+          
+          h3 {
+            font-size: 0.8rem;
+          }
+          
+          p {
+            font-size: 1.2rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  #heroCarousel {
+    height: 45vh;
+    
+    .carousel-inner .carousel-item .hero {
+      .content-area {
+        .hero-title {
+          font-size: 1.8rem;
+        }
+        .btn-shop-now {
+          padding: 0.6rem 1.8rem;
+        }
+      }
+      
+      .image-area {
+        width: 100%;
+        
+        .offer-text {
+          width: 70px;
+          height: 70px;
+          top: -5%;
+          
+          h3 {
+            font-size: 0.7rem;
+          }
+          
+          p {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}

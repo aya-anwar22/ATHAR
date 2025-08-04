@@ -1,0 +1,138 @@
+<section class="contact-section py-5 bg-light">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="section-title fw-bold">Contact <span class="text-highlight">Us</span></h2>
+      <div class="divider mx-auto"></div>
+      <p class="section-subtitle text-muted">We're here to help and answer any questions</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Contact Form -->
+      <div class="col-lg-7">
+        <div class="contact-form-card p-4 p-md-5 h-100">
+          <form (ngSubmit)="submitForm()" class="row g-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="name" placeholder="Name" 
+                       [(ngModel)]="contactData.name" name="name" required>
+                <label for="name">Your Name</label>
+                <div class="input-icon">
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="email" class="form-control" id="email" placeholder="Email"
+                       [(ngModel)]="contactData.email" name="email" required>
+                <label for="email">Email Address</label>
+                <div class="input-icon">
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="subject" placeholder="Subject"
+                       [(ngModel)]="contactData.subject" name="subject">
+                <label for="subject">Subject</label>
+                <div class="input-icon">
+                  <i class="bi bi-chat-square-text"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea class="form-control" id="message" placeholder="Message" style="height: 150px"
+                          [(ngModel)]="contactData.message" name="message" required></textarea>
+                <label for="message">Your Message</label>
+                <div class="input-icon">
+                  <i class="bi bi-pencil"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                <i class="bi bi-send-fill me-2"></i>Send Message
+              </button>
+            </div>
+
+            <!-- Alerts -->
+            <div *ngIf="success" class="alert alert-success alert-dismissible fade show mt-3">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              Message sent successfully!
+              <button type="button" class="btn-close" (click)="success = false"></button>
+            </div>
+            
+            <div *ngIf="error" class="alert alert-danger alert-dismissible fade show mt-3">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              {{ error }}
+              <button type="button" class="btn-close" (click)="error = ''"></button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-lg-5">
+        <div class="contact-info-card p-4 p-md-5 h-100">
+          <h3 class="mb-4 fw-bold"><i class="bi bi-chat-square-heart text-primary me-2"></i> Get In Touch</h3>
+          
+          <div class="contact-item d-flex mb-4">
+            <div class="icon-box bg-primary-light">
+              <i class="bi bi-geo-alt text-primary"></i>
+            </div>
+            <div class="ms-3">
+              <h5 class="mb-1">Our Location</h5>
+              <p class="mb-0">123 Loop Street, Cairo, Egypt</p>
+            </div>
+          </div>
+          
+          <div class="contact-item d-flex mb-4">
+            <div class="icon-box bg-primary-light">
+              <i class="bi bi-envelope text-primary"></i>
+            </div>
+            <div class="ms-3">
+              <h5 class="mb-1">Email Us</h5>
+<a href="mailto:contact@loopstyle.com" class="mb-0 d-block text-decoration-none text-dark">
+  contactloopstyle.com
+</a>
+            </div>
+          </div>
+          
+          <div class="contact-item d-flex mb-4">
+            <div class="icon-box bg-primary-light">
+              <i class="bi bi-telephone text-primary"></i>
+            </div>
+            <div class="ms-3">
+              <h5 class="mb-1">Call Us</h5>
+              <p class="mb-0">(+20) 109 720 6111</p>
+            </div>
+          </div>
+          
+          <div class="contact-item d-flex">
+            <div class="icon-box bg-primary-light">
+              <i class="bi bi-clock text-primary"></i>
+            </div>
+            <div class="ms-3">
+              <h5 class="mb-1">Working Hours</h5>
+              <p class="mb-0">Mon-Fri: 9am - 6pm<br>Saturday: 10am - 3pm</p>
+            </div>
+          </div>
+          
+          <div class="social-links mt-5">
+            <h5 class="mb-3">Follow Us</h5>
+            <a href="#" class="social-icon me-3"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-icon me-3"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-icon me-3"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

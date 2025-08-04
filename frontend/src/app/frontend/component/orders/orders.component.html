@@ -1,0 +1,149 @@
+
+<section class="orders-section py-5">
+  <div class="container">
+    <div class="orders-header mb-5 text-center">
+      <h1 class="display-5 fw-bold">Your Orders</h1>
+      <p class="text-muted">View and manage your order history</p>
+      <div class="divider mx-auto"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="orders.length === 0" class="empty-state text-center py-5">
+      <i class="bi bi-box-seam display-1 text-muted opacity-25"></i>
+      <h3 class="mt-3">No orders found</h3>
+      <p class="text-muted">You haven't placed any orders yet</p>
+      <a routerLink="/products" class="btn btn-success mt-3">
+        <i class="bi bi-cart me-2"></i>Start Shopping
+      </a>
+    </div>
+
+    <!-- Orders List -->
+    <div *ngFor="let order of orders" class="order-card card border-0 shadow-sm mb-4 overflow-hidden">
+      <div class="card-header bg-white py-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <div class="order-id mb-2 mb-md-0">
+            <span class="badge bg-light text-dark fs-6">
+              <i class="bi bi-receipt me-2"></i>Order #{{ order._id.slice(-8).toUpperCase() }}
+            </span>
+          </div>
+          <div class="order-status">
+            <span class="badge" [ngClass]="{
+              'bg-warning': order.status === 'processing',
+              'bg-info': order.status === 'shipped',
+              'bg-success': order.status === 'delivered',
+              'bg-danger': order.status === 'cancelled'
+            }">
+              {{ order.status | titlecase }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- Order Summary -->
+        <div class="row order-summary g-3 mb-3">
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <div class="icon-circle bg-primary-light me-3">
+                <i class="bi bi-credit-card text-primary"></i>
+              </div>
+              <div>
+                <h6 class="mb-0 text-muted">Payment</h6>
+                <p class="mb-0 fw-bold">
+                  {{ order.paymentMethod | titlecase }} | 
+                  <span [class.text-success]="order.isPaid" [class.text-danger]="!order.isPaid">
+                    {{ order.isPaid ? 'Paid' : 'Not Paid' }}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <div class="icon-circle bg-primary-light me-3">
+                <i class="bi bi-calendar-check text-primary"></i>
+              </div>
+              <div>
+                <h6 class="mb-0 text-muted">Order Date</h6>
+                <p class="mb-0 fw-bold">{{ order.placedAt | date: 'mediumDate' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <div class="icon-circle bg-primary-light me-3">
+                <i class="bi bi-box-seam text-primary"></i>
+              </div>
+              <div>
+                <h6 class="mb-0 text-muted">Items</h6>
+                <p class="mb-0 fw-bold">{{ order.items.length }} item(s)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div *ngIf="order.address" class="shipping-address mb-4 p-3 bg-light rounded">
+          <h6 class="d-flex align-items-center mb-3">
+            <i class="bi bi-truck me-2"></i> Shipping Address
+          </h6>
+          <p class="mb-1 fw-bold">{{ order.address.label }}</p>
+          <p class="mb-0 text-muted">{{ order.address.details }}</p>
+        </div>
+
+        <!-- Order Items -->
+        <h6 class="mb-3 d-flex align-items-center">
+          <i class="bi bi-list-ul me-2"></i> Order Items
+        </h6>
+        <div class="order-items">
+          <div *ngFor="let item of order.items" class="order-item row g-3 align-items-center mb-3 pb-3 border-bottom">
+            <div class="col-md-6">
+              <div class="d-flex align-items-center">
+                <div class="product-image me-3">
+                  <img [src]="item.productId?.productImages[0]" class="img-thumbnail" width="60" [alt]="item.productId?.productName">
+                </div>
+                <div>
+                             
+
+                  <h6 class="mb-1">{{ item.productId?.productName }}</h6>
+                  <small class="text-muted">SKU: {{ item.productId?.sku || 'N/A' }}</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 text-center">
+              <span class="badge bg-light text-dark">Qty: {{ item.quantity }}</span>
+            </div>
+            <div class="col-md-4 text-end">
+              <span class="fw-bold">{{ item.priceAtOrderTime }} EGP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Actions -->
+        <div class="order-actions d-flex flex-wrap gap-2 mt-4 pt-3 border-top">
+          <button
+            class="btn btn-outline-danger btn-sm"
+            (click)="cancelOrder(order._id)"
+            [disabled]="order.cancellation?.isCancelled || order.status === 'delivered'"
+          >
+            <i class="bi bi-x-circle me-1"></i> Cancel Order
+          </button>
+
+          <button
+            class="btn btn-outline-primary btn-sm"
+            (click)="requestReturn(order._id)"
+            [disabled]="order.returnRequested || order.status !== 'delivered'"
+          >
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Request Return
+          </button>
+
+          <button class="btn btn-outline-secondary btn-sm ms-auto">
+            <i class="bi bi-printer me-1"></i> Print Invoice
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,202 @@
+.about-section {
+  background-color: #f8f9fa;
+  position: relative;
+  overflow: hidden;
+
+  .section-header {
+    .section-title {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      position: relative;
+      display: inline-block;
+
+      .text-highlight {
+        color: #28a745;
+      }
+    }
+
+    .divider {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, #28a745, #6f42c1);
+      margin: 1rem auto;
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  .about-image-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+
+    .main-image {
+      transition: transform 0.5s ease;
+      z-index: 1;
+      position: relative;
+    }
+
+    .shape-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(111, 66, 193, 0.1) 100%);
+      top: 0;
+      left: 0;
+      z-index: 0;
+      border-radius: 16px;
+    }
+
+    &:hover .main-image {
+      transform: scale(1.03);
+    }
+
+    .experience-badge {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+      border: 5px solid #f8f9fa;
+
+      .years {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #28a745;
+        line-height: 1;
+      }
+
+      .text {
+        font-size: 0.7rem;
+        text-align: center;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .about-content {
+    .about-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      position: relative;
+      padding-bottom: 15px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 60px;
+        height: 3px;
+        background: #28a745;
+      }
+    }
+
+    .about-text {
+      .lead {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #555;
+      }
+
+      .about-features {
+        li {
+          font-size: 1rem;
+          padding: 8px 0;
+          border-bottom: 1px dashed #eee;
+        }
+      }
+    }
+
+    .cta-buttons {
+      .btn {
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+
+        i {
+          font-size: 1.1rem;
+        }
+      }
+
+      .btn-primary {
+        background-color: #28a745;
+        border-color: #28a745;
+
+        &:hover {
+          background-color: #218838;
+          border-color: #1e7e34;
+          transform: translateY(-3px);
+          box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+      }
+
+      .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+
+        &:hover {
+          background-color: #6c757d;
+          color: white;
+          transform: translateY(-3px);
+          box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .about-section {
+    .about-image-container {
+      .experience-badge {
+        width: 100px;
+        height: 100px;
+        right: 0;
+
+        .years {
+          font-size: 1.5rem;
+        }
+
+        .text {
+          font-size: 0.6rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    .section-header {
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+
+    .about-content {
+      .about-title {
+        font-size: 1.8rem;
+        margin-top: 2rem;
+      }
+    }
+  }
+}

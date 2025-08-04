@@ -1,0 +1,31 @@
+<div class="container mt-4" *ngIf="subcategory">
+  <h2>{{ subcategory.subcategoryName }}</h2>
+  <img [src]="subcategory.subcategoryImage" [alt]="subcategory.subcategoryName" width="300" class="mb-3" />
+</div>
+
+<div class="container mt-5">
+  <h3 class="mb-4">Products in this Subcategory</h3>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let product of products">
+      <div class="card h-100 shadow-sm">
+        <img
+          [src]="product.productImages[0]"
+          [alt]="product.productName"
+          class="card-img-top"
+          style="height: 200px; object-fit: contain;"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ product.productName }}</h5>
+          <p class="card-text">Price: {{ product.price }} EGP</p>
+          <p class="card-text">Gender: {{ product.gender }}</p>
+          <a [routerLink]="['/product', product._id]" class="btn btn-outline-primary btn-sm">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="products.length === 0" class="alert alert-warning text-center">
+    No products available for this subcategory.
+  </div>
+</div>

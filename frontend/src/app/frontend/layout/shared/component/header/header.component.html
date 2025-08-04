@@ -1,0 +1,54 @@
+<!-- ✅ الهيدر الرئيسي للموقع (نسخة RTL) -->
+<header class="top-header border-bottom" dir="rtl">
+  <div class="container">
+    <div class="header-content">
+
+      <!-- ✅ لوجو البراند -->
+      <div class="logo">
+        <a href="/" class="logo-link">
+          <img src="assets/logo.jpg" alt="اسم البراند" class="logo-icon" />
+        </a>
+      </div>
+
+      <!-- ✅ القائمة الرئيسية -->
+      <nav>
+        <ul>
+          <li><a href="#"><i class="fas fa-home"></i> الرئيسية</a></li>
+          <li><a href="#"><i class="fas fa-th-large"></i> التصنيفات</a></li>
+          <li><a href="#"><i class="fas fa-tshirt"></i> تسوق الآن</a></li>
+          <li><a href="#"><i class="fas fa-pencil-ruler"></i> الطباعة والتخصيص</a></li>
+          <li><a href="#"><i class="fas fa-star"></i> آراء العملاء</a></li>
+          <li><a href="#"><i class="fas fa-info-circle"></i> عنّا</a></li>
+          <li><a href="#"><i class="fas fa-phone"></i> تواصل معنا</a></li>
+          <li class="cart-icon">
+            <a href="#">
+              <i class="fas fa-shopping-cart"></i> السلة (<span id="cart-count-nav">0</span>)
+            </a>
+          </li>
+
+          <!-- ✅ لو فيه يوزر يظهر البروفايل -->
+          <li *ngIf="userName" class="profile-menu">
+            <a href="/profile">
+              <i class="fas fa-user-circle"></i> {{ userName }}
+            </a>
+          </li>
+
+          <!-- ✅ لو فيه يوزر يظهر تسجيل الخروج -->
+          <li *ngIf="userName">
+            <a href="#" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </a>
+          </li>
+
+          <!-- ✅ لو مفيش يوزر يظهر تسجيل الدخول وإنشاء حساب -->
+          <li *ngIf="!userName">
+            <a href="/login"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+          </li>
+          <li *ngIf="!userName">
+            <a href="/sign-up"><i class="fas fa-user-plus"></i> إنشاء حساب</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,72 @@
+
+
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">{{ isEdit ? 'Update Category' : 'Create Category' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()" enctype="multipart/form-data" class="border p-4 rounded shadow-sm bg-light">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="categoryName" class="form-label">Category Name</label>
+        <input type="text" id="categoryName" class="form-control" formControlName="categoryName" />
+      </div>
+
+      <div class="col-md-6">
+        <label for="categoryImage" class="form-label">Category Image</label>
+        <input type="file" id="categoryImage" class="form-control" (change)="handleImageChange($event)" />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary me-2">{{ isEdit ? 'Update' : 'Create' }}</button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
+    </div>
+  </form>
+
+  <hr class="my-4" />
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>{{ showDeleted ? 'Deleted Categories' : 'Active Categories' }}</h3>
+    <button class="btn btn-outline-dark" (click)="toggleDeletedView()">
+      {{ showDeleted ? 'Show Active' : 'Show Deleted' }}
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let category of showDeleted ? deletedCategories : categories">
+      <div class="card shadow-sm h-100">
+        <img [src]="category.categoryImage" class="card-img-top" [alt]="category.categoryName" style="height: 200px; object-fit: contain;" />
+        <div class="card-body">
+          <h5 class="card-title">{{ category.categoryName }}</h5>
+          <p class="card-text text-muted">Slug: {{ category.categorySlug }}</p>
+          <ng-container *ngIf="!showDeleted">
+            <button class="btn btn-warning btn-sm me-2" (click)="editCategory(category)">Edit</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCategory(category._id)">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="showDeleted">
+            <button class="btn btn-success btn-sm" (click)="restoreCategory(category._id)">Restore</button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav *ngIf="totalPages > 1" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="page === 1">
+        <button class="page-link" (click)="goToPage(page - 1)">Previous</button>
+      </li>
+
+      <li
+        class="page-item"
+        *ngFor="let p of [].constructor(totalPages); let i = index"
+        [class.active]="page === i + 1"
+      >
+        <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="page === totalPages">
+        <button class="page-link" (click)="goToPage(page + 1)">Next</button>
+      </li>
+    </ul>
+  </nav>
+</div>

@@ -1,0 +1,29 @@
+<section class="testimonials">
+  <h2>What Our Customers Say</h2>
+
+  <div class="testimonial-container">
+    <div class="testimonial" *ngFor="let rev of reviews">
+      <p>"{{ rev.userReview }}"</p>
+      <h4>- {{ rev.name }}</h4>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button class="btn btn-outline-primary" (click)="toggleForm()">
+      {{ showForm ? 'Close Review Form' : 'Add Review' }}
+    </button>
+  </div>
+
+  <form *ngIf="showForm" (ngSubmit)="submitReview()" class="review-form mt-4">
+    <div class="mb-3">
+      <input type="text" class="form-control" placeholder="Name" [(ngModel)]="newReview.name" name="name" required>
+    </div>
+    <div class="mb-3">
+      <input type="email" class="form-control" placeholder="Email" [(ngModel)]="newReview.email" name="email" required>
+    </div>
+    <div class="mb-3">
+      <textarea class="form-control" placeholder="Your Review" [(ngModel)]="newReview.userReview" name="userReview" required></textarea>
+    </div>
+    <button class="btn btn-success" type="submit">Submit Review</button>
+  </form>
+</section>

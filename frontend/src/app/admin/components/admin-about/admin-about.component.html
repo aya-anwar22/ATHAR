@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <h2>About Section</h2>
+
+  <form *ngIf="!aboutData || isEditMode" [formGroup]="aboutForm" (ngSubmit)="submit()" enctype="multipart/form-data" class="mb-4">
+    <div class="mb-3">
+      <label>Title</label>
+      <input type="text" formControlName="title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+      <label>Bio</label>
+      <textarea formControlName="bio" rows="5" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label>Photo</label>
+      <input type="file" (change)="onFileChange($event)" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+      {{ isEditMode ? 'Update About' : 'Create About' }}
+    </button>
+  </form>
+
+  <div *ngIf="aboutData && !isEditMode" class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img [src]="aboutData.photoUrl" class="img-fluid" [alt]="aboutData.title" />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5>{{ aboutData.title }}</h5>
+          <p>{{ aboutData.bio }}</p>
+          <button class="btn btn-primary" (click)="enableEdit()">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

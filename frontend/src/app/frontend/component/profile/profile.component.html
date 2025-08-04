@@ -1,0 +1,106 @@
+<div class="profile-container">
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <a href="/logout" routerLinkActive="active" class="btn btn-outline-danger mb-3">
+    <i class="bi bi-box-arrow-right"></i> Logout
+  </a>
+
+  <div *ngIf="!isEditMode && profile" class="profile-view">
+    <div class="profile-header">
+      <h2><i class="bi bi-person-circle"></i> User Profile</h2>
+      <button class="btn btn-primary" (click)="enterEditMode()">
+        <i class="bi bi-pencil-square"></i> Edit Profile
+      </button>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-item">
+        <span class="detail-label"><i class="bi bi-person"></i> Username:</span>
+        <span class="detail-value">{{ profile.userName }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label"><i class="bi bi-envelope"></i> Email:</span>
+        <span class="detail-value">{{ profile.email }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label"><i class="bi bi-telephone"></i> Phone:</span>
+        <span class="detail-value">{{ profile.phoneNumber || 'Not provided' }}</span>
+      </div>
+    </div>
+
+    <div class="address-section">
+      <h3><i class="bi bi-house-door"></i> Addresses</h3>
+      <div *ngIf="profile.addresses.length === 0" class="no-address">
+        No addresses saved
+      </div>
+      <ul class="address-list">
+        <li *ngFor="let addr of profile.addresses" class="address-item">
+          <span class="address-label">{{ addr.label }}:</span>
+          <span class="address-details">{{ addr.details }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="isEditMode && editableProfile" class="profile-edit">
+    <h2><i class="bi bi-pencil-square"></i> Edit Profile</h2>
+
+    <form (ngSubmit)="updateProfile()" class="edit-form">
+      <div class="form-group">
+        <label for="userName"><i class="bi bi-person"></i> Username</label>
+        <input id="userName" [(ngModel)]="editableProfile.userName" name="userName" class="form-control" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password"><i class="bi bi-lock"></i> Password</label>
+        <input id="password" [(ngModel)]="editableProfile.password" name="password" 
+               type="password" class="form-control" placeholder="Enter new password (leave blank to keep current)" />
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber"><i class="bi bi-telephone"></i> Phone Number</label>
+        <input id="phoneNumber" [(ngModel)]="editableProfile.phoneNumber" name="phoneNumber" class="form-control" />
+      </div>
+
+      <div class="address-edit">
+        <h3><i class="bi bi-house-door"></i> Addresses</h3>
+        <div *ngFor="let addr of editableProfile.addresses; let i = index" class="address-form-group">
+          <div class="row">
+            <div class="col-md-5">
+              <input [(ngModel)]="addr.label" name="label-{{ i }}" 
+                     class="form-control" placeholder="Label (e.g., Home)" required />
+            </div>
+            <div class="col-md-5">
+              <input [(ngModel)]="addr.details" name="details-{{ i }}" 
+                     class="form-control" placeholder="Details (e.g., Cairo, Street 123)" required />
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary add-address-btn" 
+                (click)="editableProfile.addresses.push({ label: '', details: '' })">
+          <i class="bi bi-plus-circle"></i> Add Address
+        </button>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-check-circle"></i> Save Changes
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">
+          <i class="bi bi-x-circle"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteProfile()">
+          <i class="bi bi-trash"></i> Delete Account
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

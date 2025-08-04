@@ -1,0 +1,25 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4 text-success">User Messages</h2>
+
+  <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+  <div *ngFor="let msg of messages" class="card mb-3">
+    <div class="card-body">
+      <h5>{{ msg.name }} ({{ msg.email }})</h5>
+      <p><strong>Subject:</strong> {{ msg.subject }}</p>
+      <p><strong>Message:</strong> {{ msg.message }}</p>
+      <p *ngIf="msg.isReplyed" class="text-success"><strong>Admin has already replied.</strong></p>
+
+      <div *ngIf="!msg.isReplyed && selectedMessageId === msg._id">
+        <textarea [(ngModel)]="replyText" class="form-control mb-2" rows="3" placeholder="Your reply..."></textarea>
+        <button class="btn btn-success btn-sm me-2" (click)="sendReply()">Send Reply</button>
+        <button class="btn btn-secondary btn-sm" (click)="selectedMessageId = null">Cancel</button>
+      </div>
+
+      <button *ngIf="!msg.isReplyed && selectedMessageId !== msg._id" class="btn btn-outline-primary btn-sm" (click)="selectMessage(msg._id)">
+        Reply
+      </button>
+    </div>
+  </div>
+</div>

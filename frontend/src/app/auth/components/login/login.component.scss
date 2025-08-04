@@ -1,0 +1,88 @@
+.login-section {
+  background: #f8f9fa;
+  min-height: 100vh;
+
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    transition: 0.3s ease;
+
+    h2 {
+      color: #333;
+    }
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 0.75rem;
+  }
+
+  .btn-main {
+    background-color: #333; // نفس لون sign-up المخصص
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+
+  .google-btn {
+    background-color: #ffffff;
+    color: #444;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+
+    img {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: #f1f1f1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .or-divider {
+    font-size: 0.9rem;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background-color: #ccc;
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+
+  .forget-password {
+    font-size: 0.875rem;
+    color: #6c757d;
+
+    &:hover {
+      color: #555;
+    }
+  }
+
+  .icon-main-color {
+    color: #333;
+  }
+}

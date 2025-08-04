@@ -1,0 +1,8 @@
+.env
+node_modules
+Routerscopy/
+controllers copy/
+copy/
+utilscopy/
+../frontend/
+package.json

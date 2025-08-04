@@ -1,0 +1,112 @@
+<div class="user-management-container">
+  <h2 class="page-title">Manage Users (Admin)</h2>
+
+  <div class="controls-container">
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by username"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()" />
+      <button class="search-btn" (click)="onSearch()">
+        <i class="bi bi-search"></i> Search
+      </button>
+    </div>
+
+    <div class="filter-container">
+      <label class="filter-label">
+        Filter:
+        <select class="filter-select" [(ngModel)]="filterType" (change)="onFilterChange()">
+          <option value="active">Show Active Users</option>
+          <option value="deleted">Show Deleted Users</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-message">
+    <i class="bi bi-arrow-repeat"></i> Loading users...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="bi bi-exclamation-triangle"></i> {{ errorMessage }}
+  </div>
+
+  <div class="table-container" *ngIf="users && users.length > 0">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.userName }}</td>
+          <td>{{ user.email }}</td>
+
+          <td *ngIf="editingUserId !== user._id">{{ user.role }}</td>
+          <td *ngIf="editingUserId === user._id">
+            <select class="role-select" [(ngModel)]="newRole">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </td>
+
+          <td [class.deleted]="user.isDeleted">
+            {{ user.isDeleted ? 'Deleted' : 'Active' }}
+          </td>
+
+          <td class="actions-cell">
+            <ng-container *ngIf="!user.isDeleted">
+              <button *ngIf="editingUserId !== user._id" (click)="startEditRole(user)">
+                <i class="bi bi-pencil"></i> Edit
+              </button>
+              <button *ngIf="editingUserId === user._id" (click)="saveRole(user._id)">
+                <i class="bi bi-check"></i> Save
+              </button>
+              <button *ngIf="editingUserId === user._id" (click)="cancelEdit()">
+                <i class="bi bi-x"></i> Cancel
+              </button>
+              <button (click)="confirmDelete(user._id)">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="user.isDeleted">
+              <button (click)="confirmRestore(user._id)">
+                <i class="bi bi-arrow-counterclockwise"></i> Restore
+              </button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="currentPagination.totalPages > 1" class="pagination-container">
+    <button class="pagination-btn" 
+            (click)="changePage(currentPagination.currentPage - 1)" 
+            [disabled]="currentPagination.currentPage === 1">
+      <i class="bi bi-chevron-left"></i> Previous
+    </button>
+    <span class="page-indicator">
+      Page {{ currentPagination.currentPage }} of {{ currentPagination.totalPages }}
+    </span>
+    <button class="pagination-btn" 
+            (click)="changePage(currentPagination.currentPage + 1)" 
+            [disabled]="currentPagination.currentPage === currentPagination.totalPages">
+      Next <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+
+  <div *ngIf="users && users.length === 0 && !loading" class="no-users-message">
+    <i class="bi bi-people"></i> No users found matching your criteria.
+  </div>
+</div>
+
+

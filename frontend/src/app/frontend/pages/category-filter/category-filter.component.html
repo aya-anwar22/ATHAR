@@ -1,0 +1,25 @@
+<div class="category-filter">
+  <h5 class="filter-title">Category</h5>
+  <ul class="category-list">
+    <li *ngFor="let cat of categories" class="category-item">
+<a [routerLink]="['/category', cat._id]" class="category-link" style="color: black;">{{ cat.categoryName }}</a>
+    </li>
+    <li class="view-all-item">
+      <a routerLink="/categories" class="view-all-link" style="color: black;">View All Categories</a>
+    </li>
+  </ul>
+
+  <h6 class="filter-subtitle">Sort by:</h6>
+  <select class="form-select sort-select" (change)="onSortChange($event)">
+    <option value="low-to-high">Price: Low to High</option>
+    <option value="high-to-low">Price: High to Low</option>
+  </select>
+
+  <h6 class="filter-subtitle">Price Range</h6>
+  <div class="price-range">
+    <div class="form-check price-option" *ngFor="let option of priceOptions">
+      <input class="form-check-input" type="radio" name="priceRange" [id]="option.id" (change)="onPriceRangeChange(option.id)">
+      <label class="form-check-label" [for]="option.id">{{ option.label }}</label>
+    </div>
+  </div>
+</div>

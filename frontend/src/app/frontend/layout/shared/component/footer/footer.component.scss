@@ -1,0 +1,37 @@
+/* ✅ ألوان الفوتر */
+$footer-bg: #b47d49;   // خلفية داكنة
+$footer-text: #fff; // لون النص
+$footer-link: #ccc; // لون الروابط
+$footer-link-hover: #e0a800; // لون عند المرور
+
+footer {
+  background-color: $footer-bg;
+  color: $footer-text;
+  padding: 30px 0;
+  text-align: center;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-links {
+    margin-bottom: 15px;
+
+    a {
+      color: $footer-link;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $footer-link-hover;
+      }
+    }
+  }
+
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+}

@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="row">
+    <!-- Subcategories -->
+    <div class="col-md-3" *ngIf="subcategories.length > 0">
+      <h4 class="mb-3">Subcategories</h4>
+      <div class="list-group">
+        <a
+          *ngFor="let sub of subcategories"
+          class="list-group-item list-group-item-action"
+          [routerLink]="['/sub-category', sub._id]"
+        >
+          <img
+            [src]="sub.subcategoryImage"
+            [alt]="sub.subcategoryName"
+            width="40"
+            height="40"
+            class="me-2 rounded"
+          />
+          {{ sub.subcategoryName }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="col-md-9">
+      <h2 class="text-center mb-4">Available Products</h2>
+      <div class="row">
+        <div class="col-md-4 mb-4" *ngFor="let product of products">
+          <div class="card shadow-sm h-100">
+            <img
+              [src]="product.productImages[0]"
+              class="card-img-top"
+              [alt]="product.productName"
+              style="height: 200px; object-fit: contain;"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.productName }}</h5>
+              <p class="card-text">Price: {{ product.price }} EGP</p>
+              <p class="card-text">Gender: {{ product.gender }}</p>
+
+              <p *ngIf="product.quantity === 0" class="text-danger fw-bold">
+                Out of Stock
+              </p>
+
+              <div class="d-flex justify-content-between">
+                <a
+                  [routerLink]="['/product', product._id]"
+                  class="btn btn-outline-primary btn-sm"
+                >
+                  View Details
+                </a>
+                <button
+                  class="btn btn-success btn-sm"
+                  (click)="addToCart(product)"
+                  [disabled]="product.quantity === 0"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="products.length === 1" class="alert alert-warning text-center">
+        No products available for this category.
+      </div>
+    </div>
+  </div>
+</div>

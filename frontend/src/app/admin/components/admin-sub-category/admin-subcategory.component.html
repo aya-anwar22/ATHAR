@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">{{ isEdit ? 'Update' : 'Create' }} SubCategory</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()" enctype="multipart/form-data" class="border p-4 rounded shadow-sm bg-light mb-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">SubCategory Name</label>
+        <input formControlName="subcategoryName" type="text" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Category</label>
+        <select formControlName="categoryId" class="form-select">
+          <option value="">Select Category</option>
+          <option *ngFor="let cat of categories" [value]="cat._id">
+            {{ cat.categoryName }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">SubCategory Image</label>
+      <input type="file" (change)="handleImageChange($event)" class="form-control" />
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success me-2">{{ isEdit ? 'Update' : 'Create' }}</button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
+    </div>
+  </form>
+
+  <div class="text-end mb-3">
+    <button class="btn btn-outline-primary" (click)="toggleView()">
+      Show {{ isDeletedView ? 'Active' : 'Deleted' }} SubCategories
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngFor="let sub of subcategories">
+      <div class="card shadow-sm h-100">
+        <img [src]="sub.subcategoryImage" class="card-img-top" [alt]="sub.subcategoryName" style="height: 200px; object-fit: contain;" />
+        <div class="card-body">
+  <h5 class="card-title">{{ sub.subcategoryName }}</h5>
+
+  <button *ngIf="!isDeletedView" class="btn btn-warning btn-sm me-2" (click)="editSubCategory(sub)">Edit</button>
+  <button *ngIf="!isDeletedView" class="btn btn-danger btn-sm" (click)="deleteSubCategory(sub._id)">Delete</button>
+
+  <button *ngIf="isDeletedView" class="btn btn-success btn-sm" (click)="restoreSubCategory(sub._id)">Restore</button>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>

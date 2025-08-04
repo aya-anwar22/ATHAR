@@ -1,0 +1,32 @@
+.shop-page {
+  padding: 2rem 0;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .row {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .filters-col {
+    flex: 0 0 280px;
+  }
+  
+  .products-col {
+    flex: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .shop-page .row {
+    flex-direction: column;
+  }
+  
+  .filters-col {
+    margin-bottom: 1.5rem;
+  }
+}

@@ -1,0 +1,131 @@
+.orders-section {
+  background-color: #f8f9fa;
+  min-height: 70vh;
+
+  .orders-header {
+    .divider {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, #28a745, #6f42c1);
+      margin: 1rem auto;
+      border-radius: 2px;
+    }
+  }
+
+  .empty-state {
+    i {
+      opacity: 0.25;
+    }
+
+    .btn-success {
+      border-radius: 30px;
+      padding: 0.5rem 1.5rem;
+      font-weight: 500;
+    }
+  }
+
+  .order-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bg-primary-light {
+      background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .order-summary {
+      .icon-circle {
+        i {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .shipping-address {
+      background-color: rgba(13, 110, 253, 0.05) !important;
+      border-left: 3px solid #0d6efd;
+    }
+
+    .order-items {
+      .product-image {
+        img {
+          border-radius: 8px;
+          transition: transform 0.3s ease;
+        }
+      }
+
+      .order-item:hover {
+        .product-image img {
+          transform: scale(1.05);
+        }
+      }
+    }
+
+    .order-actions {
+      .btn {
+        border-radius: 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      .btn-outline-danger {
+        &:hover:not(:disabled) {
+          background-color: #dc3545;
+          color: white;
+        }
+      }
+
+      .btn-outline-primary {
+        &:hover:not(:disabled) {
+          background-color: #0d6efd;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .orders-section {
+    .order-card {
+      .order-summary {
+        > div {
+          margin-bottom: 1rem;
+        }
+      }
+
+      .order-item {
+        > div {
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+}

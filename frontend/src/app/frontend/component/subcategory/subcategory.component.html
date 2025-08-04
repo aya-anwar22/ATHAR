@@ -1,0 +1,27 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Available SubCategories</h2>
+
+  <div class="row">
+    <div *ngFor="let sub of subcategories" class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <img
+          [src]="sub.subcategoryImage"
+          [alt]="sub.subcategoryName"
+          class="card-img-top"
+          style="height: 200px; object-fit: contain;"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ sub.subcategoryName }}</h5>
+          <p class="card-text text-muted">Slug: {{ sub.subcategorySlug }}</p>
+<a [routerLink]="['/sub-category', sub._id]" class="btn btn-outline-primary btn-sm">
+  View Details
+</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="subcategories.length === 0" class="alert alert-warning text-center">
+    No SubCategories available to show.
+  </div>
+</div>

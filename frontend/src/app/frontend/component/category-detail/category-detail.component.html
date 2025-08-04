@@ -1,0 +1,10 @@
+
+<div class="container mt-5" *ngIf="category">
+  <h2>{{ category.categoryName }}</h2>
+  <img [src]="category.categoryImage" class="img-fluid" alt="Category Image" />
+  <p>category Name: {{ category.categoryName }}</p>
+</div>
+
+<div *ngIf="!category">
+  <p>Loading category details...</p>
+</div>

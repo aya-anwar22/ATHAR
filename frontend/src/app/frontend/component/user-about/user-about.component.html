@@ -1,0 +1,53 @@
+<section class="about-section py-5" *ngIf="aboutData">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="section-title fw-bold">About <span class="text-highlight">Loop Style</span></h2>
+      <div class="divider mx-auto"></div>
+      <p class="section-subtitle text-muted">Our Fashion Story</p>
+    </div>
+    
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <div class="about-image-container position-relative">
+          <img [src]="aboutData.photoUrl" alt="About Loop Style" class="img-fluid rounded-4 shadow-lg main-image" />
+          <div class="shape-overlay"></div>
+          <div class="experience-badge">
+            <span class="years">5+</span>
+            <span class="text">Years Experience</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="about-content ps-lg-4">
+          <h2 class="about-title mb-4 fw-bold">{{ aboutData.title }}</h2>
+          <div class="about-text mb-4">
+            <p class="lead">{{ aboutData.bio }}</p>
+            <ul class="about-features list-unstyled mt-4">
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                Premium Quality Products
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                Sustainable Fashion Choices
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                Customer Satisfaction Guaranteed
+              </li>
+            </ul>
+          </div>
+          <div class="cta-buttons">
+            <a href="/products" class="btn btn-primary btn-lg me-3">
+              <i class="bi bi-bag me-2"></i>Shop Now
+            </a>
+            <a href="/contact" class="btn btn-outline-secondary btn-lg">
+              <i class="bi bi-chat-left-text me-2"></i>Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

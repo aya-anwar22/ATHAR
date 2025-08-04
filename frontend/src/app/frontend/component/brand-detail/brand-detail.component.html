@@ -1,0 +1,11 @@
+<div class="container py-5">
+  <div *ngIf="loading">Loading brand details...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="brand">
+    <h2>{{ brand.brandName }}</h2>
+    <img [src]="brand.brandImage" [alt]="brand.brandName" width="300" />
+    <p>Slug: {{ brand.brandSlug }}</p>
+   
+  </div>
+</div>
