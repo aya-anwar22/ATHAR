@@ -1,0 +1,31 @@
+<div class="collections-filter">
+  <h5 class="filter-title">Collections</h5>
+
+  <ul class="collection-list">
+    <li *ngFor="let col of collections | slice:0:2" class="collection-item">
+      <a [routerLink]="['/collections', col.collectionSlug]" class="collection-link">
+        {{ col.collectionName }}
+      </a>
+    </li>
+
+    <li class="view-all-item">
+      <a routerLink="/collections" class="view-all-link">
+        View All Collections
+      </a>
+    </li>
+  </ul>
+
+  <h6 class="filter-subtitle">Sort by:</h6>
+  <select class="sort-select" (change)="onSortChange($event)">
+    <option value="low-to-high">Price: Low to High</option>
+    <option value="high-to-low">Price: High to Low</option>
+  </select>
+
+  <h6 class="filter-subtitle">Price Range</h6>
+  <div class="price-range">
+    <div class="price-option" *ngFor="let option of priceOptions">
+      <input type="radio" name="priceRange" [id]="option.id" (change)="onPriceRangeChange(option.id)">
+      <label [for]="option.id">{{ option.label }}</label>
+    </div>
+  </div>
+</div>

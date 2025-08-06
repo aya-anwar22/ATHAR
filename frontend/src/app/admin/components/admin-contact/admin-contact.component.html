@@ -1,25 +1,162 @@
-<div class="container mt-4">
-  <h2 class="text-center mb-4 text-success">User Messages</h2>
-
-  <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
-  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
-
-  <div *ngFor="let msg of messages" class="card mb-3">
-    <div class="card-body">
-      <h5>{{ msg.name }} ({{ msg.email }})</h5>
-      <p><strong>Subject:</strong> {{ msg.subject }}</p>
-      <p><strong>Message:</strong> {{ msg.message }}</p>
-      <p *ngIf="msg.isReplyed" class="text-success"><strong>Admin has already replied.</strong></p>
-
-      <div *ngIf="!msg.isReplyed && selectedMessageId === msg._id">
-        <textarea [(ngModel)]="replyText" class="form-control mb-2" rows="3" placeholder="Your reply..."></textarea>
-        <button class="btn btn-success btn-sm me-2" (click)="sendReply()">Send Reply</button>
-        <button class="btn btn-secondary btn-sm" (click)="selectedMessageId = null">Cancel</button>
+<div class="admin-contact-container">
+  <div class="header-section">
+    <h2 class="page-title">
+      <i class="fas fa-envelope"></i>
+      User Messages
+    </h2>
+    
+    <!-- Filter Controls -->
+    <div class="filter-controls">
+      <div class="filter-group">
+        <label>Filter by Status:</label>
+        <div class="filter-options">
+          <button class="filter-btn" 
+                  [class.active]="filterStatus === 'all'"
+                  (click)="setFilter('all')">
+            All Messages
+          </button>
+          <button class="filter-btn" 
+                  [class.active]="filterStatus === 'replied'"
+                  (click)="setFilter('replied')">
+            <i class="fas fa-check-circle"></i> Replied
+          </button>
+          <button class="filter-btn" 
+                  [class.active]="filterStatus === 'pending'"
+                  (click)="setFilter('pending')">
+            <i class="fas fa-clock"></i> Pending
+          </button>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <button *ngIf="!msg.isReplyed && selectedMessageId !== msg._id" class="btn btn-outline-primary btn-sm" (click)="selectMessage(msg._id)">
-        Reply
+  <!-- Notification Messages -->
+  <div class="notification-wrapper">
+    <div *ngIf="errorMsg" class="notification error">
+      <div class="notification-content">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ errorMsg }}</span>
+      </div>
+      <button class="close-btn" (click)="errorMsg = ''">
+        <i class="fas fa-times"></i>
       </button>
     </div>
+
+    <div *ngIf="successMsg" class="notification success">
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ successMsg }}</span>
+      </div>
+      <button class="close-btn" (click)="successMsg = ''">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages List -->
+  <div class="messages-list">
+    <div *ngFor="let msg of filteredMessages" class="message-card">
+      <div class="message-header">
+        <div class="sender-info">
+          <i class="fas fa-user"></i>
+          <div>
+            <h3>{{ msg.name }}</h3>
+            <p class="email">{{ msg.email }}</p>
+          </div>
+        </div>
+        <div class="message-meta">
+          <span class="badge" [class.replied]="msg.isReplyed">
+            {{ msg.isReplyed ? 'Replied' : 'Pending' }}
+          </span>
+          <span class="date">{{ msg.createdAt | date:'medium' }}</span>
+        </div>
+      </div>
+
+      <div class="message-content">
+        <div class="subject-line">
+          <i class="fas fa-tag"></i>
+          <strong>Subject:</strong> {{ msg.subject }}
+        </div>
+        <div class="message-text">
+          <i class="fas fa-comment"></i>
+          <p>{{ msg.message }}</p>
+        </div>
+
+        <div *ngIf="msg.isReplyed" class="admin-reply">
+          <div class="reply-header">
+            <i class="fas fa-shield-alt"></i>
+            <strong>Admin Reply:</strong>
+          </div>
+          <p>{{ msg.adminReply }}</p>
+        </div>
+      </div>
+
+      <!-- Reply Section -->
+      <div *ngIf="!msg.isReplyed && selectedMessageId === msg._id" class="reply-section">
+        <div class="form-group">
+          <label for="reply-{{msg._id}}">
+            <i class="fas fa-reply"></i>
+            Your Reply
+          </label>
+          <textarea 
+            id="reply-{{msg._id}}" 
+            [(ngModel)]="replyText" 
+            class="form-control" 
+            rows="4" 
+            placeholder="Type your reply here...">
+          </textarea>
+        </div>
+        <div class="action-buttons">
+          <button class="btn send-btn" (click)="sendReply()">
+            <i class="fas fa-paper-plane"></i> Send Reply
+          </button>
+          <button class="btn cancel-btn" (click)="selectedMessageId = null">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!msg.isReplyed && selectedMessageId !== msg._id" class="action-buttons">
+        <button class="btn reply-btn" (click)="selectMessage(msg._id)">
+          <i class="fas fa-reply"></i> Reply
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredMessages.length === 0" class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <p>No messages found</p>
+      <button class="btn reset-filter" (click)="setFilter('all')" *ngIf="filterStatus !== 'all'">
+        Reset Filter
+      </button>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <nav class="pagination-nav">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="prevPage()">
+            <i class="fas fa-chevron-left"></i> Previous
+          </button>
+        </li>
+
+        <li class="page-item" 
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1">
+          <button class="page-link" (click)="goToPage(i + 1)">
+            {{ i + 1 }}
+          </button>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="nextPage()">
+            Next <i class="fas fa-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>

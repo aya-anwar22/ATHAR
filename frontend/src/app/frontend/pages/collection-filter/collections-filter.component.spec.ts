@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CategoryFilterComponent } from './category-filter.component';
+import { CategoryFilterComponent } from './collections-filter.component';
 
 describe('CategoryFilterComponent', () => {
   let component: CategoryFilterComponent;
@@ -10,7 +10,7 @@ describe('CategoryFilterComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CategoryFilterComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CategoryFilterComponent);
     component = fixture.componentInstance;

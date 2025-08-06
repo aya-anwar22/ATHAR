@@ -1,51 +1,82 @@
-<!-- ✅ الهيدر الرئيسي للموقع (نسخة RTL) -->
-<header class="top-header border-bottom" dir="rtl">
+<header class="top-header border-bottom">
   <div class="container">
     <div class="header-content">
-
-      <!-- ✅ لوجو البراند -->
+      <!-- Logo Section -->
       <div class="logo">
         <a href="/" class="logo-link">
-          <img src="assets/logo.jpg" alt="اسم البراند" class="logo-icon" />
+<img src="/logo.jpg" alt="Brand Name" class="logo-icon" />
         </a>
       </div>
 
-      <!-- ✅ القائمة الرئيسية -->
-      <nav>
-        <ul>
-          <li><a href="#"><i class="fas fa-home"></i> الرئيسية</a></li>
-          <li><a href="#"><i class="fas fa-th-large"></i> التصنيفات</a></li>
-          <li><a href="#"><i class="fas fa-tshirt"></i> تسوق الآن</a></li>
-          <li><a href="#"><i class="fas fa-pencil-ruler"></i> الطباعة والتخصيص</a></li>
-          <li><a href="#"><i class="fas fa-star"></i> آراء العملاء</a></li>
-          <li><a href="#"><i class="fas fa-info-circle"></i> عنّا</a></li>
-          <li><a href="#"><i class="fas fa-phone"></i> تواصل معنا</a></li>
-          <li class="cart-icon">
-            <a href="#">
-              <i class="fas fa-shopping-cart"></i> السلة (<span id="cart-count-nav">0</span>)
+      <!-- Main Navigation -->
+      <nav class="main-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/" class="nav-link">
+              <i class="fas fa-home"></i>
+              <span class="link-text">Home</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/products" class="nav-link">
+              <i class="fas fa-tshirt"></i>
+              <span class="link-text">Shop</span>
             </a>
           </li>
 
-          <!-- ✅ لو فيه يوزر يظهر البروفايل -->
-          <li *ngIf="userName" class="profile-menu">
-            <a href="/profile">
-              <i class="fas fa-user-circle"></i> {{ userName }}
+
+          <li class="nav-item">
+            <a href="/collections" class="nav-link">
+              <i class="fas fa-tshirt"></i>
+              <span class="link-text">Collections</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/testimonials" class="nav-link">
+              <i class="fas fa-star"></i>
+              <span class="link-text">Testimonials</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/about" class="nav-link">
+              <i class="fas fa-info-circle"></i>
+              <span class="link-text">About</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/contact-us" class="nav-link">
+              <i class="fas fa-phone"></i>
+              <span class="link-text">Contact</span>
             </a>
           </li>
 
-          <!-- ✅ لو فيه يوزر يظهر تسجيل الخروج -->
-          <li *ngIf="userName">
-            <a href="#" (click)="logout()">
-              <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+          <!-- Shopping Cart (visible only when logged in) -->
+          <li class="nav-item cart-item" *ngIf="userName">
+            <a href="/cart" class="nav-link cart-link">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="link-text">Cart</span>
+              <span class="cart-badge" id="cart-count-nav">0</span>
             </a>
           </li>
 
-          <!-- ✅ لو مفيش يوزر يظهر تسجيل الدخول وإنشاء حساب -->
-          <li *ngIf="!userName">
-            <a href="/login"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+          <!-- Profile (visible only when logged in) -->
+          <li class="nav-item profile-item" *ngIf="userName">
+            <a href="/profile" class="nav-link">
+              <i class="fas fa-user-circle"></i>
+              <span class="link-text">{{ userName }}</span>
+            </a>
           </li>
-          <li *ngIf="!userName">
-            <a href="/sign-up"><i class="fas fa-user-plus"></i> إنشاء حساب</a>
+
+          <!-- Login (visible only when not logged in) -->
+          <li class="nav-item" *ngIf="!userName">
+            <a href="/login" class="nav-link">
+              <i class="fas fa-sign-in-alt"></i>
+              <span class="link-text">Login</span>
+            </a>
           </li>
         </ul>
       </nav>

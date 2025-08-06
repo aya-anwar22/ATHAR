@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AdminBrandService } from './admin-brand.service';
+import { CollectionService } from './collection.service';
 
-describe('AdminBrandService', () => {
-  let service: AdminBrandService;
+describe('CollectionService', () => {
+  let service: CollectionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AdminBrandService);
+    service = TestBed.inject(CollectionService);
   });
 
   it('should be created', () => {

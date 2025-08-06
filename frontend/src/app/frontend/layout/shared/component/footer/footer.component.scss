@@ -1,37 +1,102 @@
-/* ✅ ألوان الفوتر */
-$footer-bg: #b47d49;   // خلفية داكنة
-$footer-text: #fff; // لون النص
-$footer-link: #ccc; // لون الروابط
-$footer-link-hover: #e0a800; // لون عند المرور
+/* Color Variables */
+$primary-color: #e0a800; // Gold
+$text-color: #ffffff; // White
+$dark-color: #333333; // Dark gray
 
-footer {
-  background-color: $footer-bg;
-  color: $footer-text;
-  padding: 30px 0;
-  text-align: center;
+/* Compact Footer Structure */
+.main-footer {
+  background-color: $dark-color;
+  color: $text-color;
+  padding: 25px 0 15px;
+  font-size: 13px;
+}
 
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+.footer-container {
+  max-width: 800px; // Narrower container
+  margin: 0 auto;
+  padding: 0 15px;
+}
 
-  .footer-links {
-    margin-bottom: 15px;
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
+.footer-col {
+  width: 48%;
+}
+
+/* Footer Sections */
+.footer-title {
+  color: $primary-color;
+  font-size: 15px;
+  margin-bottom: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba($primary-color, 0.3);
+}
+
+/* Links */
+.footer-links,
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  li {
+    margin-bottom: 8px;
+    
+    a, i {
+      color: $text-color;
+      transition: color 0.2s;
+    }
+    
     a {
-      color: $footer-link;
       text-decoration: none;
-      margin: 0 10px;
-      transition: color 0.3s ease;
-
+      display: inline-block;
+      
       &:hover {
-        color: $footer-link-hover;
+        color: $primary-color;
       }
     }
+    
+    i {
+      margin-right: 6px;
+      width: 15px;
+      text-align: center;
+      font-size: 12px;
+    }
   }
+}
 
-  p {
-    font-size: 14px;
-    margin: 0;
+/* Copyright */
+.copyright {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid rgba($text-color, 0.1);
+  font-size: 12px;
+  color: rgba($text-color, 0.7);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .footer-row {
+    flex-direction: column;
+  }
+  
+  .footer-col {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .footer-links,
+  .footer-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    
+    li {
+      margin-bottom: 5px;
+    }
   }
 }

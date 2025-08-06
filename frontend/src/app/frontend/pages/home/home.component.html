@@ -1,11 +1,16 @@
 <app-hero></app-hero>
+
+<!-- ✅ هنا نعرض الكولكشنز -->
+<app-collection></app-collection>
+
 <div class="container my-5">
   <div class="row">
     <div class="col-md-3">
-      <app-category-filter 
-        (sortChange)="onSortChanged($event)" 
-        (priceRangeChange)="onPriceRangeChanged($event)">
-      </app-category-filter>
+      <app-collections-filter
+  (sortChange)="onSortChanged($event)"
+  (priceRangeChange)="onPriceRangeChanged($event)">
+</app-collections-filter>
+
     </div>
 
     <div class="col-md-9">
@@ -18,6 +23,6 @@
 </div>
 
 <app-review></app-review>
-<app-brand></app-brand>
+<!-- <app-brand></app-brand> -->
 <app-user-about></app-user-about>
 <app-contact></app-contact>

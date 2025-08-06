@@ -1,39 +1,131 @@
-<div class="container mt-4">
-  <h2>About Section</h2>
-
-  <form *ngIf="!aboutData || isEditMode" [formGroup]="aboutForm" (ngSubmit)="submit()" enctype="multipart/form-data" class="mb-4">
-    <div class="mb-3">
-      <label>Title</label>
-      <input type="text" formControlName="title" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-      <label>Bio</label>
-      <textarea formControlName="bio" rows="5" class="form-control"></textarea>
-    </div>
-
-    <div class="mb-3">
-      <label>Photo</label>
-      <input type="file" (change)="onFileChange($event)" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-success">
-      {{ isEditMode ? 'Update About' : 'Create About' }}
-    </button>
-  </form>
-
-  <div *ngIf="aboutData && !isEditMode" class="card mb-3">
-    <div class="row g-0">
-      <div class="col-md-4">
-        <img [src]="aboutData.photoUrl" class="img-fluid" [alt]="aboutData.title" />
+<div class="admin-about-container">
+  <!-- Notification Message -->
+  <div class="notification-wrapper" *ngIf="showMessage">
+    <div class="notification {{messageType}}">
+      <div class="notification-content">
+        <i class="icon" [ngClass]="{
+          'fas fa-check-circle': messageType === 'success',
+          'fas fa-exclamation-circle': messageType === 'error',
+          'fas fa-info-circle': messageType === 'info'
+        }"></i>
+        <span>{{message}}</span>
       </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5>{{ aboutData.title }}</h5>
-          <p>{{ aboutData.bio }}</p>
-          <button class="btn btn-primary" (click)="enableEdit()">Edit</button>
+      <div class="progress-bar" *ngIf="messageType === 'info'">
+        <div class="progress" [style.width.%]="progressValue"></div>
+      </div>
+      <button class="close-btn" (click)="hideMessage()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showConfirmModal">
+    <div class="confirmation-modal">
+      <div class="modal-header">
+        <h3>Confirm Action</h3>
+        <button class="close-btn" (click)="showConfirmModal = false">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{confirmMessage}}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn cancel" (click)="showConfirmModal = false">Cancel</button>
+        <button class="btn confirm" (click)="confirmActionHandler()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Container (Only shown when creating/editing) -->
+  <div class="about-form-container" *ngIf="!aboutData || isEditMode">
+    <form [formGroup]="aboutForm" (ngSubmit)="submit()" class="about-form" enctype="multipart/form-data">
+      <div class="form-header">
+        <h2>
+          <i class="fas fa-user-circle"></i>
+          {{ isEditMode ? 'Edit About Section' : 'Create About Section' }}
+        </h2>
+      </div>
+
+      <div class="form-group">
+        <label for="title">
+          <i class="fas fa-heading"></i>
+          Title <span class="required">*</span>
+        </label>
+        <input type="text" id="title" formControlName="title" class="form-input" placeholder="Enter your title">
+        <span class="error-message" *ngIf="aboutForm.get('title')?.invalid && aboutForm.get('title')?.touched">
+          <i class="fas fa-exclamation-circle"></i> Title is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="bio">
+          <i class="fas fa-align-left"></i>
+          Bio <span class="required">*</span>
+        </label>
+        <textarea id="bio" formControlName="bio" rows="5" class="form-input" placeholder="Tell your story..."></textarea>
+        <span class="error-message" *ngIf="aboutForm.get('bio')?.invalid && aboutForm.get('bio')?.touched">
+          <i class="fas fa-exclamation-circle"></i> Bio is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i class="fas fa-image"></i>
+          Photo
+        </label>
+        <div class="file-upload-wrapper">
+          <label for="photo" class="file-upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>{{selectedFile ? 'Change Image' : 'Choose Image'}}</span>
+            <input type="file" id="photo" (change)="onFileChange($event)" accept="image/*">
+          </label>
+        </div>
+
+        <div class="image-preview" *ngIf="selectedFile || (aboutData?.photoUrl && isEditMode)">
+          <img [src]="selectedFile ? previewImage : aboutData?.photoUrl" alt="Preview">
+          <button type="button" class="remove-image-btn" (click)="selectedFile = null; previewImage = null">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" [disabled]="aboutForm.invalid">
+          <i class="fas" [class.fa-save]="isEditMode" [class.fa-plus]="!isEditMode"></i>
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+        <button type="button" (click)="cancelForm()" class="cancel-btn" *ngIf="isEditMode">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- About Display (Shown when data exists and not editing) -->
+  <div class="about-display" *ngIf="aboutData && !isEditMode">
+    <div class="about-card">
+      <div class="about-image">
+        <img [src]="aboutData.photoUrl" alt="{{ aboutData.title }}" 
+             onerror="this.src='assets/images/default-about.jpg'">
+      </div>
+      <div class="about-content">
+        <h2><i class="fas fa-user-tie"></i> {{ aboutData.title }}</h2>
+        <p class="bio-text">{{ aboutData.bio }}</p>
+        <div class="about-actions">
+          <button (click)="enableEdit()" class="edit-btn">
+            <i class="fas fa-edit"></i> Edit
+          </button>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Create Button (Shown only when no data exists) -->
+  <div class="create-button-wrapper" *ngIf="!aboutData && !isEditMode">
+    <button class="create-btn" (click)="showCreateForm()">
+      <i class="fas fa-plus"></i> Create About Section
+    </button>
   </div>
 </div>

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminReviewService, Review } from '../../../core/services/admin-review.service';
-
 @Component({
-  selector: 'app-admin-review',
+  selector: 'app-admin-testimonials',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './admin-review.component.html'
+  templateUrl: './admin-testimonials.component.html'
 })
-export class AdminReviewComponent implements OnInit {
+export class AdminTestimonialsComponent implements OnInit {
   reviews: Review[] = [];
   isLoading: boolean = false;
 

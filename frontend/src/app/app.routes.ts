@@ -8,19 +8,21 @@ import { UserGuard } from './core/guards/user.guard';
 
 export const routes: Routes = [
   {
-    
+
     path: '',
     component: LayoutComponent,
     children: [
 
       {
-  path: '',
-  loadComponent: () =>
-    import('./frontend/pages/home/home.component').then(m => m.HomeComponent),
-},
+        path: '',
+        loadComponent: () =>
+          import('./frontend/pages/home/home.component').then(m => m.HomeComponent),
+      },
 
-        { path: 'oauth-callback', loadComponent: () =>
-          import('./auth/components/oauth-callback/oauth-callback.component').then(m => m.OauthCallbackComponent), },
+      {
+        path: 'oauth-callback', loadComponent: () =>
+          import('./auth/components/oauth-callback/oauth-callback.component').then(m => m.OauthCallbackComponent),
+      },
 
       {
         path: 'sign-up',
@@ -45,7 +47,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'contact',
+        path: 'contact-us',
         loadComponent: () => import('./frontend/component/contact/contact.component').then(m => m.ContactComponent)
       },
       {
@@ -66,7 +68,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./frontend/component/profile/profile.component').then(m => m.ProfileComponent),
       },
-       {
+      {
         path: 'categories',
         loadComponent: () =>
           import('./frontend/component/category/category.component').then(m => m.CategoryComponent),
@@ -76,34 +78,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./frontend/component/category-detail/category-detail.component').then(m => m.CategoryDetailComponent),
       },
-     
 
-      {
-
-        path: 'brands',
-        loadComponent: () =>
-          import('./frontend/component/brand/brand.component').then(m => m.BrandComponent),
-      },
 
 
       {
-
-        path: 'brand/:id',
+        path: 'collections',
         loadComponent: () =>
-          import('./frontend/component/brand-detail/brand-detail.component').then(m => m.BrandDetailComponent),
+          import('./frontend/component/collection/collection.component').then(m => m.CollectionComponent),
       },
 
-      {
-        path: 'sub-categories',
-        loadComponent: () =>
-          import('./frontend/component/subcategory/subcategory.component').then(m => m.SubcategoryComponent),
-      },
+      // {
+      //   path: 'collection/:id',
+      //   loadComponent: () =>
+      //     import('./frontend/component/collection-detail/collection-detail.component').then(m => m.CollectionDetailComponent),
+      // },
 
-      {
-        path: 'sub-category/:id',
-        loadComponent: () =>
-          import('./frontend/component/subcategory-detail/subcategory-detail.component').then(m => m.SubCategoryDetailComponent),
-      },
 
       {
         path: 'products',
@@ -111,7 +100,7 @@ export const routes: Routes = [
           import('./frontend/component/product/product.component').then(m => m.ProductComponent),
       },
 
-     
+
 
       {
         path: 'product/:id',
@@ -121,14 +110,14 @@ export const routes: Routes = [
 
 
       {
-        path: 'reviews',
+        path: 'testimonials',
         loadComponent: () =>
           import('./frontend/component/review/review.component').then(m => m.ReviewComponent),
       },
-{
-  path: 'logout',
-  loadComponent: () => import('./auth/components/logout/logout.component').then(m => m.LogoutComponent)
-},
+      {
+        path: 'logout',
+        loadComponent: () => import('./auth/components/logout/logout.component').then(m => m.LogoutComponent)
+      },
 
       {
         path: 'cart',
@@ -138,7 +127,7 @@ export const routes: Routes = [
 
       {
         path: 'orders',
-      canActivate: [UserGuard],
+        canActivate: [UserGuard],
 
         loadComponent: () => import('./frontend/component/orders/orders.component').then(m => m.OrdersComponent)
       }
@@ -156,21 +145,21 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminlayoutComponent,
-        canActivate: [AdminGuard],
+    canActivate: [AdminGuard],
 
 
     children: [
- 
+
       {
         path: 'dashboard',
         loadComponent: () =>
           import('./admin/components/dashboard/dashboard.component').then(m => m.DashboardComponent),
       },
 
-{
-  path: 'profile',
-  loadComponent: () => import('./frontend/component/profile/profile.component').then(m => m.ProfileComponent)
-},
+      {
+        path: 'profile',
+        loadComponent: () => import('./frontend/component/profile/profile.component').then(m => m.ProfileComponent)
+      },
 
       {
         path: 'contact',
@@ -179,11 +168,11 @@ export const routes: Routes = [
       },
 
 
-       {
-        path: 'brand',
-        loadComponent: () =>
-          import('./admin/components/brand/brand.component').then(m => m.BrandComponent),
-      },
+      // {
+      //   path: 'brand',
+      //   loadComponent: () =>
+      //     import('./admin/components/brand/brand.component').then(m => m.BrandComponent),
+      // },
       {
         path: 'customers',
         loadComponent: () =>
@@ -195,9 +184,9 @@ export const routes: Routes = [
           import('./admin/components/admin-category/admin-category.component').then(m => m.AdminCategoryComponent),
       },
       {
-        path: 'brands',
+        path: 'collections',
         loadComponent: () =>
-          import('./admin/components/admin-brand/admin-brand.component').then(m => m.AdminBrandComponent),
+          import('./admin/components/admin-collection/admin-collection.component').then(m => m.AdminCollectionComponent),
       },
 
       {
@@ -206,16 +195,16 @@ export const routes: Routes = [
           import('./admin/components/admin-sub-category/admin-sub-category.component').then(m => m.AdminSubCategoryComponent),
       },
 
-      {
-        path: 'products',
-        loadComponent: () =>
-          import('./admin/components/admin-product/admin-product.component').then(m => m.AdminProductComponent),
-      },
+      // {
+      //   path: 'products',
+      //   loadComponent: () =>
+      //     import('./admin/components/admin-product/admin-product.component').then(m => m.AdminProductComponent),
+      // },
 
 
       {
-        path: 'reviews',
-        loadComponent: () => import('./admin/components/admin-review/admin-review.component').then(m => m.AdminReviewComponent)
+        path: 'testimonials',
+        loadComponent: () => import('./admin/components/admin-testimonials/admin-testimonials.component').then(m => m.AdminTestimonialsComponent)
       },
 
       {

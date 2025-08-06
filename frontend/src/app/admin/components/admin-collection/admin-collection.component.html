@@ -1,0 +1,132 @@
+<div class="admin-collection-container">
+  <!-- Notification Message -->
+  <div class="notification-wrapper" *ngIf="showMessage">
+    <div class="notification {{messageType}}">
+      <div class="notification-content">
+        <i class="icon" [ngClass]="{
+          'fas fa-check-circle': messageType === 'success',
+          'fas fa-exclamation-circle': messageType === 'error',
+          'fas fa-info-circle': messageType === 'info'
+        }"></i>
+        <span>{{message}}</span>
+      </div>
+      <div class="progress-bar" *ngIf="messageType === 'info'">
+        <div class="progress" [style.width.%]="progressValue"></div>
+      </div>
+      <button class="close-btn" (click)="hideMessage()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showConfirmModal">
+    <div class="confirmation-modal">
+      <div class="modal-header">
+        <h3>Confirm Action</h3>
+        <button class="close-btn" (click)="showConfirmModal = false">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{confirmMessage}}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn cancel" (click)="showConfirmModal = false">Cancel</button>
+        <button class="btn confirm" (click)="confirmActionHandler()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="toggle-view-btn" (click)="toggleDeletedView()">
+      <i class="fas" [class.fa-eye]="!isDeletedView" [class.fa-eye-slash]="isDeletedView"></i>
+      {{ isDeletedView ? 'View Active Collections' : 'View Deleted Collections' }}
+    </button>
+    <button class="create-btn" (click)="showCreateForm()" *ngIf="!isEdit && !isDeletedView">
+      <i class="fas fa-plus"></i> Create New Collection
+    </button>
+  </div>
+
+  <div class="collection-form-container" *ngIf="isEdit || isCreating">
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="collection-form" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="collectionName">Collection Name <span class="required">*</span></label>
+        <input type="text" id="collectionName" formControlName="collectionName" class="form-input">
+        <span class="error-message" *ngIf="form.get('collectionName')?.invalid && form.get('collectionName')?.touched">
+          Collection name is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="collectionImage">Collection Image</label>
+        <div class="file-upload-wrapper">
+          <label for="collectionImage" class="file-upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>{{selectedImage ? 'Change Image' : 'Choose Image'}}</span>
+            <input type="file" id="collectionImage" (change)="handleImageChange($event)" accept="image/*">
+          </label>
+        </div>
+        <div class="image-preview" *ngIf="selectedImage || (isEdit && editingCollection?.collectionImage)">
+          <img [src]="selectedImage ? previewImage : editingCollection?.collectionImage" alt="Preview">
+          <button type="button" class="remove-image-btn" (click)="selectedImage = null; previewImage = null">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" [disabled]="form.invalid">
+          <i class="fas" [class.fa-save]="isEdit" [class.fa-plus]="!isEdit"></i>
+          {{ isEdit ? 'Update' : 'Create' }}
+        </button>
+        <button type="button" (click)="resetForm()" class="cancel-btn">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="collections-grid">
+    <div *ngFor="let collection of collections" class="collection-card">
+      <div class="card-image">
+        <img [src]="collection.collectionImage" alt="{{ collection.collectionName }}" 
+             onerror="this.src='assets/images/default-collection.jpg'">
+      </div>
+      <div class="card-content">
+        <h3>{{ collection.collectionName }}</h3>
+        <div class="card-actions">
+          <button *ngIf="!isDeletedView" (click)="editCollection(collection)" class="edit-btn" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button 
+            (click)="isDeletedView ? promptRestore(collection.collectionSlug) : promptDelete(collection.collectionSlug)" 
+            class="action-btn"
+            [class.delete-btn]="!isDeletedView"
+            [class.restore-btn]="isDeletedView"
+            [title]="isDeletedView ? 'Restore' : 'Delete'">
+            <i [class]="isDeletedView ? 'fas fa-trash-restore' : 'fas fa-trash'"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="collections.length === 0">
+      <i class="fas fa-box-open"></i>
+      <p>No {{isDeletedView ? 'deleted' : ''}} collections found</p>
+      <button class="create-btn" (click)="showCreateForm()" *ngIf="!isDeletedView">
+        <i class="fas fa-plus"></i> Create New Collection
+      </button>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="goToPage(page - 1)" [disabled]="page === 1" class="pagination-btn">
+      <i class="fas fa-chevron-left"></i> Previous
+    </button>
+    <span class="page-info">Page {{ page }} of {{ totalPages }}</span>
+    <button (click)="goToPage(page + 1)" [disabled]="page === totalPages" class="pagination-btn">
+      Next <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

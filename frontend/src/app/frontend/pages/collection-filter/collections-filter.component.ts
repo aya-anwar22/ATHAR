@@ -1,30 +1,39 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserCategoryService, Category } from '../../../core/services/user-category.service';
+import { CollectionService } from '../../../core/services/collection.service';
+import { Collection } from '../../../core/models/collections.model';
 
 @Component({
-  selector: 'app-category-filter',
+  selector: 'app-collections-filter',  // ✅ لازم يكون ده
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './category-filter.component.html'
+  templateUrl: './collections-filter.component.html'
 })
-export class CategoryFilterComponent implements OnInit {
-  categories: Category[] = [];
+export class CollectionsFilterComponent implements OnInit {
+  collections: Collection[] = [];
 
   @Output() sortChange = new EventEmitter<string>();
   @Output() priceRangeChange = new EventEmitter<{ min: number; max?: number }>();
 
-  constructor(private categoryService: UserCategoryService) {}
+  constructor(private collectionService: CollectionService) {}
 
   ngOnInit(): void {
-    this.categoryService.getCategories().subscribe({
-      next: (res) => {
-        this.categories = res.activecategory?.dataActive || [];
-      },
-      error: (err) => console.error('Failed to load categories:', err)
-    });
-  }
+  this.collectionService.getAllCollectionsForUser(1, 100, false, '').subscribe({
+  next: (res: any) => {
+    this.collections = res.activeCollections?.dataActive.map((item: any) => ({
+      _id: item._id,
+      collectionName: item.collectionsName.trim(), // ممكن تضيف trim لو في مسافات زايدة
+      collectionSlug: item.collectionsSlug,
+      collectionImage: item.collectionsImage,
+      isDeleted: item.isDeleted
+    })) || [];
+  },
+  error: (err) => console.error('Failed to load collections:', err)
+});
+
+}
+
 
   onSortChange(event: any) {
     this.sortChange.emit(event.target.value);
@@ -37,13 +46,14 @@ export class CategoryFilterComponent implements OnInit {
     { id: 'p4', label: 'EGP 600 - EGP 800' },
     { id: 'p5', label: 'EGP 800+' }
   ];
+
   onPriceRangeChange(range: string) {
     const ranges: any = {
       p1: { min: 0, max: 200 },
       p2: { min: 200, max: 400 },
       p3: { min: 400, max: 600 },
       p4: { min: 600, max: 800 },
-      p5: { min: 800 } 
+      p5: { min: 800 }
     };
     this.priceRangeChange.emit(ranges[range]);
   }

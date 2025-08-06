@@ -5,14 +5,14 @@ import { HeaderComponent } from './shared/component/header/header.component';
 import { FooterComponent } from './shared/component/footer/footer.component';
 import { NavbarComponent } from './shared/component/navbar/navbar.component';
 import { HeroComponent } from '../pages/hero/hero.component';
-import { CategoryFilterComponent } from '../pages/category-filter/category-filter.component';
+import { CollectionsFilterComponent } from '../pages/collection-filter/collections-filter.component';
 import { ProductTabsComponent } from '../pages/product-tabs/product-tabs.component';
 
 
 @Component({
   selector: 'app-layout',
-  standalone:true,
-  imports: [HeaderComponent,FooterComponent, RouterOutlet, NavbarComponent],
+  standalone: true,
+  imports: [HeaderComponent, FooterComponent, RouterOutlet, NavbarComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
