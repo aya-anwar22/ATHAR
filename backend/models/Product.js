@@ -14,16 +14,12 @@ const productSchema = new mongoose.Schema({
         unique:true,
     },
     description:String,
-    brandId:{
+    collectionId:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref:'Brand'
+        ref:'Collections'
     },
-    subcategoryId:{
-        type: mongoose.Schema.Types.ObjectId,
-        required:true,
-        ref:'Subcategory',
-    },
+   
     price:{
         type:Number,
         required:true,
@@ -34,7 +30,7 @@ const productSchema = new mongoose.Schema({
     },
     gender:{
         type:String,
-        enum:[ 'male' , 'female'],
+        enum:[ 'male' , 'female', 'both'],
         required:true
     },
     productImages: [{type: String}],

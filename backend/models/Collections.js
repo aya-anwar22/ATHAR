@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
-const categorySchema = new mongoose.Schema({
-    categoryName:{
+const collectionsSchema = new mongoose.Schema({
+    collectionsName:{
         type:String,
         required: true,
-        minlength: [3, 'Category Name cannot be smaller than 3 characters'],
-        maxlength: [100 , 'Category Name cannot be longer than 100 characters'],
+        minlength: [3, 'Collections Name cannot be smaller than 3 characters'],
+        maxlength: [100, 'Collections Name cannot be longer than 100 characters'],
     },
 
-    categorySlug:{
+    collectionsSlug:{
         type: String,
         required: true,
         unique:true,
     },
-    categoryImage:{
+    collectionsImage:{
         type:String,
         required: true,
     },
@@ -30,8 +30,9 @@ const categorySchema = new mongoose.Schema({
         ref: 'User',
         default:null
       } 
+      
 
 }, { timestamps: true });
 
-const Category = mongoose.model('Category', categorySchema);
-module.exports= Category;
+const Collections = mongoose.model('Collections', collectionsSchema);
+module.exports= Collections;

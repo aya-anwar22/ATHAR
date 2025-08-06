@@ -28,15 +28,31 @@ exports.contactUs = asyncHandler(async(req, res) =>{
 });
 
 
-exports.getAllMessage = asyncHandler(async(req, res) =>{
+exports.getAllMessage = asyncHandler(async (req, res) => {
     const isAdmin = req.user && req.user.role === 'admin';
     if (!isAdmin) {
         return res.status(403).json({ message: 'Access denied' });
     }
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const totalMessages = await contactUs.countDocuments();
+    const totalPages = Math.ceil(totalMessages / limit);
+
     const messages = await contactUs.find()
-    res.status(200).json(messages)
-})
+        .sort({ createdAt: -1 }) // من الأحدث للأقدم
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    res.status(200).json({
+        currentPage: page,
+        totalPages,
+        totalMessages,
+        messages
+    });
+});
+
 
 exports.replyToMessage = asyncHandler(async(req, res) =>{
     const isAdmin = req.user && req.user.role === 'admin';

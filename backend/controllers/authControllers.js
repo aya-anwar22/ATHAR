@@ -298,11 +298,11 @@ exports.login = asyncHandler(async (req, res) => {
     });
   }
 
-  if (!user || !(await user.correctPassword(password))) {
-  return res.status(400).json({
-    message: "Email or password failed"
-  });
-}
+  // if (!user || !(await user.correctPassword(password))) {
+  // return res.status(400).json({
+  //   message: "Email or password failed"
+  // });
+// }
 
 
   if (!user.isVerified) {

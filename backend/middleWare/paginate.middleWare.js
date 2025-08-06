@@ -1,30 +1,29 @@
 module.exports = (model, options = {}) => async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = Math.min(parseInt(req.query.limit) || 10, 50);
   const skip = (page - 1) * limit;
   const sortBy = req.query.sort || '-createdAt';
   const search = req.query.search || '';
-
-  const searchRegex = new RegExp(search, 'i');
-  const searchField = options.searchField || 'userName';
+  const searchField = options.searchField || null;
   const selectFields = options.select || '';
 
-  // لو جالك categoryId في الكويري
-  const categoryId = req.query.category;
+  const filters = { ...req.query };
+  delete filters.page;
+  delete filters.limit;
+  delete filters.sort;
+  delete filters.search;
 
   try {
-    let baseFilter = search
-      ? { [searchField]: searchRegex }
-      : {};
+    let baseFilter = { ...filters };
 
-    if (categoryId) {
-      baseFilter = { ...baseFilter, categoryId };
+    if (search && searchField) {
+      baseFilter[searchField] = new RegExp(search, 'i');
     }
 
     const activeFilter = { ...baseFilter, isDeleted: false };
     const deletedFilter = { ...baseFilter, isDeleted: true };
 
-    const [activeUsers, totalActive] = await Promise.all([
+    const [activeDocs, totalActive] = await Promise.all([
       model.find(activeFilter)
         .skip(skip)
         .limit(limit)
@@ -33,7 +32,7 @@ module.exports = (model, options = {}) => async (req, res, next) => {
       model.countDocuments(activeFilter),
     ]);
 
-    const [deletedUsers, totalDeleted] = await Promise.all([
+    const [deletedDocs, totalDeleted] = await Promise.all([
       model.find(deletedFilter)
         .skip(skip)
         .limit(limit)
@@ -47,13 +46,13 @@ module.exports = (model, options = {}) => async (req, res, next) => {
         total: totalActive,
         currentPage: page,
         totalPages: Math.ceil(totalActive / limit),
-        dataActive: activeUsers
+        dataActive: activeDocs,
       },
       deleted: {
         total: totalDeleted,
         currentPage: page,
         totalPages: Math.ceil(totalDeleted / limit),
-        dataDeleted: deletedUsers
+        dataDeleted: deletedDocs,
       }
     };
 

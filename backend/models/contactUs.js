@@ -22,6 +22,6 @@ const contactUsSchema = new mongoose.Schema({
         default:false,
       },
       adminReply:String
-});
+}, { timestamps: true });
 const ContactUs = mongoose.model('ContactUs', contactUsSchema);
 module.exports = ContactUs

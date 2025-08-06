@@ -1,135 +1,188 @@
-const SubCategory = require('../models/Subcategory');
 const asyncHandler = require('express-async-handler');
 const cloudinary = require('../config/cloudinary');
 const { default: slugify } = require('slugify');
-const Category = require('../models/Category');
-const Subcategory = require('../models/Subcategory');
+
 const Product = require('../models/Product');
-const Brand = require('../models/Brand');
+const Collection = require('../models/Collections');
 
 // // for admin
-exports.addProduct = asyncHandler(async(req, res) =>{
-    const { productName,subcategoryId, brandId, price, quantity,gender, stockAlertThreshold} = req.body;
-    if(!productName|| !subcategoryId || !brandId || !price|| !quantity|| !gender|| !stockAlertThreshold){
+exports.addProduct = asyncHandler(async (req, res) => {
+    const { productName, collectionsSlug, price, quantity, gender, stockAlertThreshold, description } = req.body;
+
+    if (!productName || !collectionsSlug || !price || !quantity || !gender) {
         return res.status(400).json({
-            message: "All filed required"
-        })
+            message: "All required fields must be provided"
+        });
     }
 
-    const subcategory = await SubCategory.findById(subcategoryId);
-    if(!subcategory){
-        return res.status(404).json({message : "subcategory not found"})
+    const collection = await Collection.findOne({ collectionsSlug });
+    if (!collection) {
+        return res.status(404).json({ message: "Collection not found" });
     }
 
-    const brand = await Brand.findById(brandId);
-    if(!brand){
-        return res.status(404).json({message : "brand not found"})
+    // ✅ Check if productName already exists
+    const existingProduct = await Product.findOne({ productName });
+    if (existingProduct) {
+        return res.status(400).json({ message: "Product name already exists. Please choose another name." });
     }
-    try{
+
+    try {
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: 'product'
         });
 
-        const productSlug = slugify(productName, {lower: true});
+        const productSlug = slugify(productName, { lower: true });
+
         const newProduct = await Product.create({
-            productName,productSlug, subcategoryId, brandId, price, quantity,gender, stockAlertThreshold,
-        
-            productImages: result.secure_url
-        })
+            productName,
+            productSlug,
+            collectionId: collection._id,
+            price,
+            quantity,
+            gender,
+            description,
+            stockAlertThreshold,
+            productImages: [result.secure_url]
+        });
+
         res.status(201).json({
-            message: "Product create Successfully",
-            Product: newProduct
-        })
-    } catch(error){
-        return res.status(501).json({message: error.message})
+            message: "Product created successfully",
+            product: newProduct
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
 });
 
-exports.getAllProduct = asyncHandler(async(req, res) =>{
-   return res.status(200).json({
-    activeProduct: res.paginateMiddleWare.active,
-    deletedProduct: res.paginateMiddleWare.deleted
 
-    })
-});
-
-exports.getProductById = asyncHandler(async(req, res) =>{
-    const productId = req.params.productId
-    const product = await Product.findById(productId);
-    if(!product){
-        return res.status(404).json({message : "product not found"})
-    }
+exports.getAllProduct = asyncHandler(async (req, res) => {
     return res.status(200).json({
-        message: product
-    })
-})
+        activeProduct: res.paginateMiddleWare.active,
+        deletedProduct: res.paginateMiddleWare.deleted
+    });
+});
+
+exports.getProductBySlug = asyncHandler(async (req, res) => {
+    const productSlug = req.params.productSlug;
+    const product = await Product.findOne({ productSlug });
+
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.status(200).json({ product });
+});
 
 exports.updateProduct = asyncHandler(async (req, res) => {
-    const productId = req.params.productId;
-    const { productName,subcategoryId, brandId, price, quantity,gender, stockAlertThreshold} = req.body;
-    const product = await Product.findById(productId);
+    const productSlug = req.params.productSlug;
+    const { productName, collectionsSlug, price, quantity, gender, stockAlertThreshold, description } = req.body;
+
+    const product = await Product.findOne({ productSlug });
     if (!product) {
-        return res.status(404).json({ message: "product not found" });
-    }
-    const brand = await Brand.findById(brandId);
-    if(!brand){
-        return res.status(404).json({message : "Brand not found"})
-    }
-    const subCategory = await SubCategory.findById(subcategoryId);
-    if (!subCategory) {
-        return res.status(404).json({ message: "SubCategory not found" });
+        return res.status(404).json({ message: "Product not found" });
     }
 
+    const collection = await Collection.findOne({ collectionsSlug });
+    if (!collection) {
+        return res.status(404).json({ message: "Collection not found" });
+    }
 
-    
+    // ✅ Check if new productName is already taken by another product
+    if (productName && productName !== product.productName) {
+        const existingProduct = await Product.findOne({ productName });
+        if (existingProduct) {
+            return res.status(400).json({ message: "Product name already exists. Please choose another name." });
+        }
+    }
 
     try {
-        let imageUrl = product.productImages;
+        let imageUrls = product.productImages;
+
         if (req.file && req.file.path) {
             const result = await cloudinary.uploader.upload(req.file.path, {
                 folder: 'product'
             });
-            imageUrl = result.secure_url;
+            imageUrls.push(result.secure_url);
         }
 
-        const productSlug = productName
+        const updatedSlug = productName
             ? slugify(productName, { lower: true })
             : product.productSlug;
 
         const updateData = {
             productName: productName || product.productName,
-            productSlug,
-            productImages: imageUrl,
-            subcategoryId: subcategoryId || product.subcategoryId,
-            brandId: brandId || product.brandId,
+            productSlug: updatedSlug,
+            collectionId: collection._id,
             price: price || product.price,
             quantity: quantity || product.quantity,
             gender: gender || product.gender,
+            description: description || product.description,
             stockAlertThreshold: stockAlertThreshold || product.stockAlertThreshold,
+            productImages: imageUrls
         };
 
-        const updateProduct = await Product.findByIdAndUpdate(
-            productId,
+        const updatedProduct = await Product.findOneAndUpdate(
+            { productSlug },
             updateData,
             { new: true }
         );
 
         res.status(200).json({
             message: "Product updated successfully",
-            product: updateProduct
+            product: updatedProduct
         });
     } catch (error) {
-        return res.status(500).json({ message: "Error updating category", error });
+        return res.status(500).json({ message: error.message });
     }
 });
 
-exports.deleteProduct = asyncHandler(async(req, res) =>{
-    const productId = req.params.productId;
-    const product = await Product.findById(productId);
-    if(!product){
-        return res.status(404).json({
-            message: "product not found"
-        })
+exports.removeImageFromProduct = asyncHandler(async (req, res) => {
+    const productSlug = req.params.productSlug;
+    const { imageUrl } = req.body;
+
+    if (!imageUrl) {
+        return res.status(400).json({ message: "Image URL is required" });
+    }
+
+    // 1. نجيب المنتج
+    const product = await Product.findOne({ productSlug });
+
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+
+    // 2. نتحقق إن الصورة موجودة
+    const imageIndex = product.productImages.indexOf(imageUrl);
+    if (imageIndex === -1) {
+        return res.status(404).json({ message: "Image not found in product" });
+    }
+
+    // 3. نحذف الصورة من Cloudinary (اختياري)
+    const publicId = imageUrl.split('/').pop().split('.')[0]; // استخراج public_id من الرابط
+    try {
+        await cloudinary.uploader.destroy(`product/${publicId}`);
+    } catch (err) {
+        console.warn("Cloudinary image not deleted:", err.message);
+    }
+
+    // 4. نحذف الرابط من المصفوفة
+    product.productImages.splice(imageIndex, 1);
+
+    await product.save();
+
+    return res.status(200).json({
+        message: "Image removed successfully",
+        product
+    });
+});
+
+
+exports.deleteProduct = asyncHandler(async (req, res) => {
+    const productSlug = req.params.productSlug;
+    const product = await Product.findOne({ productSlug });
+
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
     }
 
     if (product.isDeleted) {
@@ -137,71 +190,51 @@ exports.deleteProduct = asyncHandler(async(req, res) =>{
         product.deletedAt = null;
         product.deletedBy = null;
         await product.save();
-        return res.status(200).json({ message: 'product restored successfully' });
+        return res.status(200).json({ message: 'Product restored successfully' });
     }
 
     product.isDeleted = true;
     product.deletedAt = new Date();
-    product.deletedBy = req.user._id
+    product.deletedBy = req.user._id;
 
     await product.save();
-    res.status(200).json({
-        message : "product soft-deleted successfully"
-    })
-})
-
-// // for user
-
-exports.getAllProductByUser = asyncHandler(async (req, res) => {
-  const categoryId = req.query.category;
-  const brandId = req.query.brand;
-  const subcategoryId = req.query.subcategory;
-
-  // 1️⃣ تجهيز فلتر فارغ
-  let filter = { isDeleted: false };
-
-  // 2️⃣ لو فيه subcategoryId → نحطه في الفلتر
-  if (subcategoryId) {
-    filter.subcategoryId = subcategoryId;
-  }
-
-  // 3️⃣ لو فيه categoryId → نجيب الـ subcategories اللي جواه ونفلتر بيها
-  if (categoryId) {
-    const subcategories = await Subcategory.find({ categoryId, isDeleted: false }).select('_id');
-    const subcategoryIds = subcategories.map(sc => sc._id);
-    filter.subcategoryId = { $in: subcategoryIds };
-  }
-
-  // 4️⃣ لو فيه brandId
-  if (brandId) {
-    filter.brandId = brandId;
-  }
-
-  // 5️⃣ جلب المنتجات بعد الفلترة
-  const products = await Product.find(filter);
-
-  return res.status(200).json({
-    message: 'Filtered products',
-    activeProdut: {
-      total: products.length,
-      dataActive: products,
-      currentPage: 1,
-      totalPages: 1
-    }
-  });
+    return res.status(200).json({ message: "Product soft-deleted successfully" });
 });
 
-exports.getProductByIdByUser = asyncHandler(async(req, res) =>{
-    const productId = req.params.productId
-    const product = await Product.findOne({
-    _id: productId,
-    isDeleted: false
-    }).select('-isDeleted -deletedAt -deletedBy');
-    if(!product){
-        return res.status(404).json({
-            message: "productnot found"
-        })
-    }
-    return res.status(200).json(product)
+// // for user
+exports.getAllProductByUser = asyncHandler(async (req, res) => {
+    const collectionId = req.query.collection;
 
-})
+    let filter = { isDeleted: false };
+
+    if (collectionId) {
+        filter.collectionId = collectionId;
+    }
+
+    const products = await Product.find(filter);
+
+    return res.status(200).json({
+        message: 'Filtered products',
+        activeProduct: {
+            total: products.length,
+            dataActive: products,
+            currentPage: 1,
+            totalPages: 1
+        }
+    });
+});
+
+exports.getProductBySlugByUser = asyncHandler(async (req, res) => {
+    const productSlug = req.params.productSlug;
+
+    const product = await Product.findOne({
+        productSlug,
+        isDeleted: false
+    }).select('-isDeleted -deletedAt -deletedBy');
+
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.status(200).json(product);
+});
