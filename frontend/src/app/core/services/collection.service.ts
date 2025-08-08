@@ -7,7 +7,7 @@ import { Collection, CollectionPaginationResponse } from '../models/collections.
   providedIn: 'root'
 })
 export class CollectionService {
-  private apiUrl = `http://localhost:3000/api/v1/collections`;
+  private apiUrl = `https://athar-snowy.vercel.app/api/v1/collections`;
 
   constructor(private http: HttpClient) {}
 

@@ -13,7 +13,7 @@ interface AboutResponse {
 
 @Injectable({ providedIn: 'root' })
 export class UserAboutService {
-  private baseUrl = 'http://localhost:3000/api/v1/about';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/about';
 
   constructor(private http: HttpClient) {}
 

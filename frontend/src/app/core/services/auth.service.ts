@@ -27,7 +27,7 @@ interface IUser {
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'accessToken';
-  private apiUrl = `http://localhost:3000/v1/auth`;
+  private apiUrl = `https://athar-snowy.vercel.app/v1/auth`;
 
 
   private myUser = new BehaviorSubject<IUser | null>(null);

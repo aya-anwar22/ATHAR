@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserOrderService {
-  private baseUrl = 'http://localhost:3000/api/v1/order';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/order';
 
   constructor(private http: HttpClient) {}
 

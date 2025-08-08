@@ -16,7 +16,7 @@ interface CartResponse {
 
 @Injectable({ providedIn: 'root' })
 export class UserCartService {
-  private baseUrl = 'http://localhost:3000/api/v1/cart';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/cart';
 
   constructor(private http: HttpClient) {}
 

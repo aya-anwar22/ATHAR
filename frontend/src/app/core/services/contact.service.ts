@@ -13,7 +13,7 @@ export interface ContactMessage {
   providedIn: 'root'
 })
 export class ContactService {
-  private baseUrl = 'https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/contact';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/contact';
 
   constructor(private http: HttpClient) {}
 

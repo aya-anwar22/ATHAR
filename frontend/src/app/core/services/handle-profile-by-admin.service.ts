@@ -6,7 +6,7 @@ import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileAdminService {
-  private apiUrl = `http://localhost:3000/api/v1/user`;
+  private apiUrl = `https://athar-snowy.vercel.app/api/v1/user`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

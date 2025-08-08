@@ -25,7 +25,7 @@ export interface CategoryListResponse {
   providedIn: 'root'
 })
 export class UserCategoryService {
-  private apiUrl = 'https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/category';
+  private apiUrl = 'https://athar-snowy.vercel.app/api/v1/category';
 
   constructor(private http: HttpClient) {}
 

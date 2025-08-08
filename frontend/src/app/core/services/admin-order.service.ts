@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const BASE_URL = 'http://localhost:3000/api/v1/order';
+const BASE_URL = 'https://athar-snowy.vercel.app/api/v1/order';
 
 @Injectable({ providedIn: 'root' })
 export class AdminOrderService {

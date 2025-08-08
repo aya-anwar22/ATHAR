@@ -6,7 +6,7 @@ import { SubCategory, SubCategoryListResponse } from '../models/subcategory.mode
 
 @Injectable({ providedIn: 'root' })
 export class UserSubCategoryService {
-  private baseUrl = 'https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/sub-category';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/sub-category';
 
   constructor(private http: HttpClient) {}
 

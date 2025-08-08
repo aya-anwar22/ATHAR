@@ -14,7 +14,7 @@ export interface Review {
 
 @Injectable({ providedIn: 'root' })
 export class UserReviewService {
-  private baseUrl = 'http://localhost:3000/api/v1/review';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/review';
 
   constructor(private http: HttpClient) {}
 

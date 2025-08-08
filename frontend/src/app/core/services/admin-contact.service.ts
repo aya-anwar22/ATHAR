@@ -9,7 +9,7 @@ import { ContactMessage } from '../models/ContactMessage.model';
   providedIn: 'root'
 })
 export class AdminContactService {
-  private baseUrl = 'http://localhost:3000/api/v1/contact';
+  private baseUrl = 'https://athar-snowy.vercel.app/api/v1/contact';
 
   constructor(private http: HttpClient) {}
 
