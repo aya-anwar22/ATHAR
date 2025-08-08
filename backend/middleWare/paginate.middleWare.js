@@ -24,20 +24,12 @@ module.exports = (model, options = {}) => async (req, res, next) => {
     const deletedFilter = { ...baseFilter, isDeleted: true };
 
     const [activeDocs, totalActive] = await Promise.all([
-      model.find(activeFilter)
-        .skip(skip)
-        .limit(limit)
-        .sort(sortBy)
-        .select(selectFields),
+      model.find(activeFilter).skip(skip).limit(limit).sort(sortBy).select(selectFields),
       model.countDocuments(activeFilter),
     ]);
 
     const [deletedDocs, totalDeleted] = await Promise.all([
-      model.find(deletedFilter)
-        .skip(skip)
-        .limit(limit)
-        .sort(sortBy)
-        .select(selectFields),
+      model.find(deletedFilter).skip(skip).limit(limit).sort(sortBy).select(selectFields),
       model.countDocuments(deletedFilter),
     ]);
 
@@ -47,12 +39,14 @@ module.exports = (model, options = {}) => async (req, res, next) => {
         currentPage: page,
         totalPages: Math.ceil(totalActive / limit),
         dataActive: activeDocs,
+        query: activeFilter // ✅ أضفنا الـ query هنا
       },
       deleted: {
         total: totalDeleted,
         currentPage: page,
         totalPages: Math.ceil(totalDeleted / limit),
         dataDeleted: deletedDocs,
+        query: deletedFilter // ✅ أضفنا الـ query هنا
       }
     };
 

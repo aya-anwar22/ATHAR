@@ -191,6 +191,12 @@ exports.register = asyncHandler(async (req, res) => {
     });
   }
 
+  if(!phoneNumber){
+     return res.status(400).json({
+      status: "failed",
+      message: "Please enter phoneNumber",
+    });
+  }
   if (!password || !confirmPassword) {
     return res.status(400).json({
       status: "failed",
@@ -314,17 +320,18 @@ exports.login = asyncHandler(async (req, res) => {
 
   const { accessToken, refreshToken } = await generateTokens(user, true);
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "development",
-    sameSite: "Strict",
-    maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
-  });
+  // res.cookie("refreshToken", refreshToken, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "development",
+  //   sameSite: "Strict",
+  //   maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+  // });
 
   return res.status(200).json({
     status: "success",
     message: "Login successful.",
     accessToken: accessToken,
+    refreshToken:refreshToken
   });
 });
 
@@ -364,7 +371,7 @@ exports.resetPassword = asyncHandler(async(req, res) =>{
 });
 // refreshToken 
 exports.refreshToken = asyncHandler(async(req, res) => {
-  const { refreshToken } = req.cookies;
+const refreshToken = req.body.refreshToken 
 
   if (!refreshToken) {
     return res.status(400).json({ message: 'No refresh token provided' });
@@ -395,6 +402,9 @@ res.cookie('refreshToken', refreshToken, {
 // logout 
 exports.logout = asyncHandler(async(req, res) =>{
   const { refreshToken } = req.body;
+    console.log(refreshToken || null); // 👈 مهم جدًا
+
+    
   const user = await User.findOne({ refreshToken });
   if(!user){
     return res.status(404).json({message: "Invaild refresh Token"});

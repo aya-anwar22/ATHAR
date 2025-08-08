@@ -30,16 +30,29 @@ exports.getAllReview = asyncHandler(async (req, res) => {
 
 // Get All Review
 exports.getAllReviewByAdmin = asyncHandler(async (req, res) => {
-    const isAdmin = req.user && req.user.role === 'admin';
-    if (!isAdmin) {
-        return res.status(403).json({ message: 'Access denied' });
-    }
-    const reviews = await Review.find();
-    if(reviews.length === 0){
-        return res.status(404).json("reviews not found")
-    }
-    res.status(200).json(reviews);
+  const isAdmin = req.user && req.user.role === 'admin';
+  if (!isAdmin) {
+    return res.status(403).json({ message: 'Access denied' });
+  }
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const total = await Review.countDocuments(); // احسب عدد الريفيوهات كله
+  const reviews = await Review.find().skip(skip).limit(limit).sort({ createdAt: -1 });
+
+  const totalPages = Math.ceil(total / limit);
+
+  res.status(200).json({
+    data: reviews,
+    total,
+    currentPage: page,
+    totalPages
+  });
 });
+
+
 // acceccpt Review
 exports.acceccptReview = asyncHandler(async(req, res) =>{
     const reviewId = req.params.reviewId

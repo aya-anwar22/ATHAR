@@ -139,17 +139,17 @@ exports.getOrders = asyncHandler(async(req, res) =>{
 });
 
 
-exports.requestReturn = asyncHandler(async(req, res) =>{
+exports.requestReturn = asyncHandler(async(req, res) => {
   const orderId = req.params.orderId;
   const userId = req.user._id;
-  const order = await Order.findById(orderId);
+  const order = await Order.findById(orderId).populate('items.productId'); // جلب تفاصيل المنتجات في الأوردر
+
   if(!order){
-    return res.status(404).json({message: "order not found"})
+    return res.status(404).json({message: "order not found"});
   }
-   if (order.userId.toString() !== userId.toString()) {
+  if (order.userId.toString() !== userId.toString()) {
     return res.status(403).json({ message: "Access denied" });
   }
-
   if (order.status !== "delivered") {
     return res.status(400).json({ message: "You can only return a delivered order" });
   }
@@ -158,10 +158,19 @@ exports.requestReturn = asyncHandler(async(req, res) =>{
     return res.status(400).json({ message: "Return period expired" });
   }
 
+  // إضافة الكمية للمنتجات
+  for (const item of order.items) {
+    const product = item.productId;
+    if (product) {
+      product.quantity += item.quantity; // زيادة الكمية في المخزن
+      await product.save();
+    }
+  }
+
   order.returnRequested = true;
   await order.save();
 
-  res.status(200).json({ message: "Return request submitted" });
+  res.status(200).json({ message: "Return request submitted and stock updated" });
 });
 
 
@@ -170,18 +179,25 @@ exports.cancelOrder = asyncHandler(async (req, res) => {
   const orderId = req.params.orderId;
   const userId = req.user._id;
 
-  const order = await Order.findById(orderId);
+  const order = await Order.findById(orderId).populate('items.productId'); // جلب تفاصيل المنتجات
 
   if (!order) {
     return res.status(404).json({ message: "Order not found" });
   }
-
   if (order.userId.toString() !== userId.toString()) {
     return res.status(403).json({ message: "Access denied" });
   }
-
   if (order.status !== "preparing") {
     return res.status(400).json({ message: "Order can only be cancelled while preparing" });
+  }
+
+  // إضافة الكمية للمنتجات
+  for (const item of order.items) {
+    const product = item.productId;
+    if (product) {
+      product.quantity += item.quantity;
+      await product.save();
+    }
   }
 
   order.cancellation = {
@@ -193,7 +209,7 @@ exports.cancelOrder = asyncHandler(async (req, res) => {
   order.status = "cancelled";
   await order.save();
 
-  res.status(200).json({ message: "Order cancelled successfully" });
+  res.status(200).json({ message: "Order cancelled successfully and stock updated" });
 });
 
 
@@ -217,7 +233,7 @@ exports.getAllOrders = asyncHandler(async (req, res) => {
   }
 
   const orders = await Order.find(filter)
-    .populate("userId", "userName email")
+    .populate("userId", "userName email phoneNumber")
      .populate('items.productId', '_id productName price imageUrl') 
     .sort({ createdAt: -1 });
 

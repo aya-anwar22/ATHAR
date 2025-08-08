@@ -7,60 +7,98 @@ const Collection = require('../models/Collections');
 
 // // for admin
 exports.addProduct = asyncHandler(async (req, res) => {
-    const { productName, collectionsSlug, price, quantity, gender, stockAlertThreshold, description } = req.body;
+  const {
+    productName,
+    collectionsSlug,
+    price,
+    quantity,
+    gender,
+    stockAlertThreshold,
+    description
+  } = req.body;
 
-    if (!productName || !collectionsSlug || !price || !quantity || !gender) {
-        return res.status(400).json({
-            message: "All required fields must be provided"
-        });
-    }
+  if (!productName || !collectionsSlug || !price || !quantity || !gender) {
+    return res.status(400).json({
+      message: "All required fields must be provided"
+    });
+  }
 
-    const collection = await Collection.findOne({ collectionsSlug });
-    if (!collection) {
-        return res.status(404).json({ message: "Collection not found" });
-    }
+  const collection = await Collection.findOne({ collectionsSlug });
+  if (!collection) {
+    return res.status(404).json({ message: "Collection not found" });
+  }
 
-    // ✅ Check if productName already exists
-    const existingProduct = await Product.findOne({ productName });
-    if (existingProduct) {
-        return res.status(400).json({ message: "Product name already exists. Please choose another name." });
-    }
+  const existingProduct = await Product.findOne({ productName });
+  if (existingProduct) {
+    return res.status(400).json({
+      message: "Product name already exists. Please choose another name."
+    });
+  }
 
-    try {
-        const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'product'
-        });
+  try {
+    // ✅ Upload all images to Cloudinary
+    const uploadResults = await Promise.all(
+      req.files.map(file =>
+        cloudinary.uploader.upload(file.path, {
+          folder: 'product'
+        })
+      )
+    );
 
-        const productSlug = slugify(productName, { lower: true });
+    const productImages = uploadResults.map(result => result.secure_url);
+    const productSlug = slugify(productName, { lower: true });
 
-        const newProduct = await Product.create({
-            productName,
-            productSlug,
-            collectionId: collection._id,
-            price,
-            quantity,
-            gender,
-            description,
-            stockAlertThreshold,
-            productImages: [result.secure_url]
-        });
+    const newProduct = await Product.create({
+      productName,
+      productSlug,
+      collectionId: collection._id,
+      price,
+      quantity,
+      gender,
+      description,
+      stockAlertThreshold,
+      productImages
+    });
 
-        res.status(201).json({
-            message: "Product created successfully",
-            product: newProduct
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
+    res.status(201).json({
+      message: "Product created successfully",
+      product: newProduct
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 });
+
 
 
 exports.getAllProduct = asyncHandler(async (req, res) => {
-    return res.status(200).json({
-        activeProduct: res.paginateMiddleWare.active,
-        deletedProduct: res.paginateMiddleWare.deleted
-    });
+  const { dataActive, ...activeMeta } = res.paginateMiddleWare.active;
+  const { dataDeleted, ...deletedMeta } = res.paginateMiddleWare.deleted;
+
+  const populatedActive = await Product.populate(dataActive, {
+    path: 'collectionId',
+    select: 'collectionsSlug collectionsName',
+  });
+
+  const populatedDeleted = await Product.populate(dataDeleted, {
+    path: 'collectionId',
+    select: 'collectionsSlug collectionsName',
+  });
+
+  return res.status(200).json({
+    activeProduct: {
+      ...activeMeta,
+      dataActive: populatedActive
+    },
+    deletedProduct: {
+      ...deletedMeta,
+      dataDeleted: populatedDeleted
+    }
+  });
 });
+
+
+
 
 exports.getProductBySlug = asyncHandler(async (req, res) => {
     const productSlug = req.params.productSlug;
@@ -74,67 +112,81 @@ exports.getProductBySlug = asyncHandler(async (req, res) => {
 });
 
 exports.updateProduct = asyncHandler(async (req, res) => {
-    const productSlug = req.params.productSlug;
-    const { productName, collectionsSlug, price, quantity, gender, stockAlertThreshold, description } = req.body;
+  const productSlug = req.params.productSlug;
+  const {
+    productName,
+    collectionsSlug,
+    price,
+    quantity,
+    gender,
+    stockAlertThreshold,
+    description
+  } = req.body;
 
-    const product = await Product.findOne({ productSlug });
-    if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+  const product = await Product.findOne({ productSlug });
+  if (!product) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+
+  const collection = await Collection.findOne({ collectionsSlug });
+  if (!collection) {
+    return res.status(404).json({ message: "Collection not found" });
+  }
+
+  if (productName && productName !== product.productName) {
+    const existingProduct = await Product.findOne({ productName });
+    if (existingProduct) {
+      return res.status(400).json({ message: "Product name already exists. Please choose another name." });
+    }
+  }
+
+  try {
+    let imageUrls = product.productImages;
+
+    // ✅ Handle multiple new images
+    if (req.files && req.files.length > 0) {
+      const uploadResults = await Promise.all(
+        req.files.map(file =>
+          cloudinary.uploader.upload(file.path, {
+            folder: 'product'
+          })
+        )
+      );
+      const newImages = uploadResults.map(result => result.secure_url);
+      imageUrls = imageUrls.concat(newImages); // keep existing + new
     }
 
-    const collection = await Collection.findOne({ collectionsSlug });
-    if (!collection) {
-        return res.status(404).json({ message: "Collection not found" });
-    }
+    const updatedSlug = productName
+      ? slugify(productName, { lower: true })
+      : product.productSlug;
 
-    // ✅ Check if new productName is already taken by another product
-    if (productName && productName !== product.productName) {
-        const existingProduct = await Product.findOne({ productName });
-        if (existingProduct) {
-            return res.status(400).json({ message: "Product name already exists. Please choose another name." });
-        }
-    }
+    const updateData = {
+      productName: productName || product.productName,
+      productSlug: updatedSlug,
+      collectionId: collection._id,
+      price: price || product.price,
+      quantity: quantity || product.quantity,
+      gender: gender || product.gender,
+      description: description || product.description,
+      stockAlertThreshold: stockAlertThreshold || product.stockAlertThreshold,
+      productImages: imageUrls
+    };
 
-    try {
-        let imageUrls = product.productImages;
+    const updatedProduct = await Product.findOneAndUpdate(
+      { productSlug },
+      updateData,
+      { new: true }
+    );
 
-        if (req.file && req.file.path) {
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'product'
-            });
-            imageUrls.push(result.secure_url);
-        }
-
-        const updatedSlug = productName
-            ? slugify(productName, { lower: true })
-            : product.productSlug;
-
-        const updateData = {
-            productName: productName || product.productName,
-            productSlug: updatedSlug,
-            collectionId: collection._id,
-            price: price || product.price,
-            quantity: quantity || product.quantity,
-            gender: gender || product.gender,
-            description: description || product.description,
-            stockAlertThreshold: stockAlertThreshold || product.stockAlertThreshold,
-            productImages: imageUrls
-        };
-
-        const updatedProduct = await Product.findOneAndUpdate(
-            { productSlug },
-            updateData,
-            { new: true }
-        );
-
-        res.status(200).json({
-            message: "Product updated successfully",
-            product: updatedProduct
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 });
+
 
 exports.removeImageFromProduct = asyncHandler(async (req, res) => {
     const productSlug = req.params.productSlug;
@@ -203,15 +255,26 @@ exports.deleteProduct = asyncHandler(async (req, res) => {
 
 // // for user
 exports.getAllProductByUser = asyncHandler(async (req, res) => {
-    const collectionId = req.query.collection;
+const collectionsSlug = req.query.collectionsSlug;
 
     let filter = { isDeleted: false };
 
-    if (collectionId) {
-        filter.collectionId = collectionId;
+    if (collectionsSlug) {
+        // دور على الكولكشن بناءً على الـ slug
+        const collection = await Collection.findOne({ collectionsSlug, isDeleted: false });
+
+        if (!collection) {
+            return res.status(404).json({ message: 'Collection not found' });
+        }
+
+        filter.collectionId = collection._id;
     }
 
-    const products = await Product.find(filter);
+    const products = await Product.find(filter).populate({
+  path: 'collectionId',
+  select: 'collectionsName collectionsSlug'
+});
+
 
     return res.status(200).json({
         message: 'Filtered products',
@@ -224,13 +287,20 @@ exports.getAllProductByUser = asyncHandler(async (req, res) => {
     });
 });
 
+
 exports.getProductBySlugByUser = asyncHandler(async (req, res) => {
     const productSlug = req.params.productSlug;
 
     const product = await Product.findOne({
-        productSlug,
-        isDeleted: false
-    }).select('-isDeleted -deletedAt -deletedBy');
+  productSlug,
+  isDeleted: false
+})
+.select('-isDeleted -deletedAt -deletedBy')
+.populate({
+  path: 'collectionId',
+  select: 'collectionsName collectionsSlug'
+});
+
 
     if (!product) {
         return res.status(404).json({ message: "Product not found" });

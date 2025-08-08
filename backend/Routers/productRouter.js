@@ -12,9 +12,10 @@ router.post(
   '/',
   authenticate,
   authorize('admin'),
-  upload.single('productImages'),
+  upload.array('productImages', 5),
   productControllers.addProduct
 );
+
 
 router.get(
   '/get-by-admin',
@@ -37,7 +38,7 @@ router.patch(
   '/:productSlug',
   authenticate,
   authorize('admin'),
-  upload.single('productImages'),
+  upload.array('productImages', 5),
   productControllers.updateProduct
 );
 router.put('/remove-image/:productSlug', authenticate, authorize('admin'), productControllers.removeImageFromProduct);
