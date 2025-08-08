@@ -1,113 +1,238 @@
-.testimonials {
-  padding: 4rem 2rem;
-  background-color: #f8f9fa;
-  text-align: center;
-  
-  h2 {
-    margin-bottom: 2rem;
-    color: #2c3e50;
-    font-size: 2.5rem;
-    font-weight: 700;
-  }
+/* Color Variables */
+$primary-color: #e0a800; // Gold
+$secondary-color: #b47d49; // Brown
+$text-color: #333;
+$light-bg: #f9f5f0;
+$border-color: #e0d6c8;
 
-  .testimonial-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
+/* Base Styles */
+.testimonials-section {
+  padding: 4rem 0;
+  background-color: $light-bg;
+  font-family: 'Arial', sans-serif;
 
-  .testimonial {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 350px;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-    }
-
-    p {
-      font-style: italic;
-      color: #555;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-
-    h4 {
-      color: #2c3e50;
-      font-weight: 600;
-    }
-  }
-
-  .review-form {
-    max-width: 600px;
+  .container {
+    max-width: 1200px;
     margin: 0 auto;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-    .form-control {
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 0.75rem;
-
-      &:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-      }
-    }
-
-    textarea.form-control {
-      min-height: 120px;
-    }
-
-    .btn-success {
-      background-color: #2ecc71;
-      border-color: #2ecc71;
-      padding: 0.5rem 1.5rem;
-      font-weight: 500;
-
-      &:hover {
-        background-color: #27ae60;
-        border-color: #27ae60;
-      }
-    }
-  }
-
-  .btn-outline-primary {
-    color: #3498db;
-    border-color: #3498db;
-    padding: 0.5rem 1.5rem;
-    font-weight: 500;
-
-    &:hover {
-      background-color: #3498db;
-      color: white;
-    }
+    padding: 0 1rem;
   }
 }
 
-// Responsive adjustments
+/* Section Title */
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: $secondary-color;
+  margin-bottom: 0.5rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: $primary-color;
+    margin: 1rem auto;
+  }
+}
+
+.section-subtitle {
+  text-align: center;
+  color: lighten($text-color, 20%);
+  margin-bottom: 3rem;
+  font-size: 1.1rem;
+}
+
+/* Testimonial Container */
+.testimonial-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Testimonial Card */
+.testimonial-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid $border-color;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.testimonial-content {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.quote-icon {
+  position: absolute;
+  top: -15px;
+  left: -10px;
+  font-size: 4rem;
+  color: rgba($primary-color, 0.2);
+  font-family: serif;
+  line-height: 1;
+}
+
+.testimonial-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: $text-color;
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.author-name {
+  font-size: 1.1rem;
+  color: $secondary-color;
+  margin: 0;
+}
+
+.rating-stars {
+  color: $primary-color;
+  font-size: 0.9rem;
+}
+
+.star-icon {
+  display: inline-block;
+  margin-right: 2px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.btn-review {
+  background-color: $secondary-color;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: darken($secondary-color, 10%);
+    transform: translateY(-2px);
+  }
+
+  .material-icons {
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+}
+
+/* Review Form */
+.review-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid $border-color;
+}
+
+.form-title {
+  text-align: center;
+  color: $secondary-color;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: $text-color;
+    font-weight: 500;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+
+    &::placeholder {
+      color: lighten($text-color, 40%);
+    }
+  }
+
+  textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
+}
+
+.form-actions {
+  text-align: center;
+}
+
+.btn-submit {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+    transform: translateY(-2px);
+  }
+
+  .material-icons {
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .testimonials {
-    padding: 2rem 1rem;
+  .testimonial-container {
+    grid-template-columns: 1fr;
+  }
 
-    h2 {
-      font-size: 2rem;
-    }
+  .section-title {
+    font-size: 2rem;
+  }
 
-    .testimonial-container {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .testimonial {
-      width: 100%;
-    }
+  .review-form {
+    padding: 1.5rem;
   }
 }

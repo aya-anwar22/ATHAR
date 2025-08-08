@@ -11,7 +11,7 @@ interface About {
 
 @Injectable({ providedIn: 'root' })
 export class AdminAboutService {
-  private baseUrl = 'http://localhost:3000/api/v1/about';
+  private baseUrl = 'https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/about';
 
   constructor(private http: HttpClient) {}
 

@@ -1,41 +1,73 @@
-<div class="container mt-4">
-  <h2>Manage Reviews</h2>
+<div class="testimonials-container">
+  <h2 class="page-title">Manage Reviews</h2>
 
-  <div *ngIf="isLoading" class="alert alert-info text-center">Loading...</div>
+  <div *ngIf="isLoading" class="loading-indicator">
+    <div class="spinner"></div>
+    <span>Loading reviews...</span>
+  </div>
 
-  <table *ngIf="!isLoading && reviews.length > 0" class="table table-bordered">
-    <thead class="table-light">
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Review</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let review of reviews; trackBy: trackById">
-        <td>{{ review.name }}</td>
-        <td>{{ review.email }}</td>
-        <td>{{ review.userReview }}</td>
-        <td>
-          <span class="badge" [ngClass]="review.isApproved ? 'bg-success' : 'bg-warning'">
-            {{ review.isApproved ? 'Approved' : 'Pending' }}
-          </span>
-        </td>
-        <td>
-          <button *ngIf="!review.isApproved" class="btn btn-sm btn-primary me-2" (click)="approveReview(review._id)">
-            Approve
-          </button>
-          <button class="btn btn-sm btn-danger" (click)="deleteReview(review._id)">
-            Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="!isLoading && reviews.length > 0" class="reviews-table-container">
+    <table class="reviews-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Review</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let review of reviews; trackBy: trackById">
+          <td>{{ review.name }}</td>
+          <td>{{ review.email }}</td>
+          <td class="review-content">{{ review.userReview }}</td>
+          <td>
+            <span class="status-badge" [class.approved]="review.isApproved" [class.pending]="!review.isApproved">
+              {{ review.isApproved ? 'Approved' : 'Pending' }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button *ngIf="!review.isApproved" class="approve-btn" (click)="approveReview(review._id)">
+              Approve
+            </button>
+            <button class="delete-btn" (click)="promptDelete(review._id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  <div *ngIf="!isLoading && reviews.length === 0" class="alert alert-warning text-center">
-    No reviews found.
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && reviews.length === 0" class="empty-state">
+    <i class="fas fa-comment-slash"></i>
+    <p>No reviews found</p>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showConfirmModal">
+    <div class="confirmation-modal">
+      <div class="modal-header">
+        <h3>Confirm Action</h3>
+        <button class="close-btn" (click)="showConfirmModal = false">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{confirmMessage}}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn cancel" (click)="showConfirmModal = false">Cancel</button>
+        <button class="btn confirm" (click)="deleteReview()">Confirm</button>
+      </div>
+    </div>
   </div>
 </div>

@@ -26,7 +26,10 @@ export class ReviewComponent implements OnInit {
   }
 
   loadReviews(): void {
-    this.reviewService.getAll().subscribe(data => this.reviews = data);
+    this.reviewService.getAll().subscribe({
+      next: (data) => this.reviews = data,
+      error: (err) => console.error('Error loading reviews:', err)
+    });
   }
 
   toggleForm(): void {
@@ -34,10 +37,13 @@ export class ReviewComponent implements OnInit {
   }
 
   submitReview(): void {
-    this.reviewService.create(this.newReview).subscribe(res => {
-      this.newReview = { name: '', email: '', userReview: '' };
-      this.showForm = false;
-      this.loadReviews();
+    this.reviewService.create(this.newReview).subscribe({
+      next: (res) => {
+        this.newReview = { name: '', email: '', userReview: '' };
+        this.showForm = false;
+        this.loadReviews();
+      },
+      error: (err) => console.error('Error submitting review:', err)
     });
   }
 }

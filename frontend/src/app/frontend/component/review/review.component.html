@@ -1,29 +1,57 @@
-<section class="testimonials">
-  <h2>What Our Customers Say</h2>
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">What Our Customers Say</h2>
+    <p class="section-subtitle">Hear from our satisfied customers</p>
 
-  <div class="testimonial-container">
-    <div class="testimonial" *ngFor="let rev of reviews">
-      <p>"{{ rev.userReview }}"</p>
-      <h4>- {{ rev.name }}</h4>
+    <div class="testimonial-container">
+      <div class="testimonial-card" *ngFor="let rev of reviews">
+        <div class="testimonial-content">
+          <div class="quote-icon">"</div>
+          <p class="testimonial-text">{{ rev.userReview }}</p>
+        </div>
+        <div class="testimonial-author">
+          <h4 class="author-name">- {{ rev.name }}</h4>
+
+        </div>
+      </div>
     </div>
+
+    <div class="action-buttons">
+      <button class="btn-review" (click)="toggleForm()">
+        {{ showForm ? 'Close Review Form' : 'Share Your Experience' }}
+        <span class="material-icons">{{ showForm ? 'close' : 'edit' }}</span>
+      </button>
+    </div>
+
+    <form *ngIf="showForm" (ngSubmit)="submitReview()" class="review-form">
+      <h3 class="form-title">Write a Review</h3>
+      
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" class="form-control" 
+               placeholder="Enter your name" 
+               [(ngModel)]="newReview.name" name="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" class="form-control" 
+               placeholder="Enter your email" 
+               [(ngModel)]="newReview.email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="review">Your Review</label>
+        <textarea id="review" class="form-control" 
+                  placeholder="Share your experience with us..." 
+                  [(ngModel)]="newReview.userReview" name="userReview" required></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn-submit" type="submit">
+          Submit Review <span class="material-icons">send</span>
+        </button>
+      </div>
+    </form>
   </div>
-
-  <div class="text-center mt-4">
-    <button class="btn btn-outline-primary" (click)="toggleForm()">
-      {{ showForm ? 'Close Review Form' : 'Add Review' }}
-    </button>
-  </div>
-
-  <form *ngIf="showForm" (ngSubmit)="submitReview()" class="review-form mt-4">
-    <div class="mb-3">
-      <input type="text" class="form-control" placeholder="Name" [(ngModel)]="newReview.name" name="name" required>
-    </div>
-    <div class="mb-3">
-      <input type="email" class="form-control" placeholder="Email" [(ngModel)]="newReview.email" name="email" required>
-    </div>
-    <div class="mb-3">
-      <textarea class="form-control" placeholder="Your Review" [(ngModel)]="newReview.userReview" name="userReview" required></textarea>
-    </div>
-    <button class="btn btn-success" type="submit">Submit Review</button>
-  </form>
 </section>

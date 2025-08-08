@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.prod';
 import { AuthService } from './auth.service';
 import { Categry, CategryPaginationResponse } from '../models/category.model';
 
@@ -9,7 +8,7 @@ import { Categry, CategryPaginationResponse } from '../models/category.model';
   providedIn: 'root'
 })
 export class AdminCategoryService {
-  private apiUrl = `${environment.apiUrl}/category`;
+  private apiUrl = `https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/category`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

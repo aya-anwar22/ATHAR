@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.prod';
 
 @Injectable({ providedIn: 'root' })
 export class AdminSubCategoryService {
-  private apiUrl = `${environment.apiUrl}/sub-category`;
+  private apiUrl = `https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/sub-category`;
 
   constructor(private http: HttpClient) {}
 

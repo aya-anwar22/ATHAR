@@ -1,9 +1,24 @@
 <div class="container mt-4">
   <h2>All Orders</h2>
+
+  <!-- 🔽 فلتر الحالة -->
+  <div class="mb-3">
+    <label for="statusFilter" class="form-label">Filter by Status:</label>
+    <select id="statusFilter" class="form-select w-25" [(ngModel)]="selectedStatus" (change)="filterOrders()">
+      <option value="">All</option>
+      <option value="preparing">Preparing</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <!-- ✅ جدول الطلبات -->
   <table class="table table-striped table-bordered">
     <thead class="table-dark">
       <tr>
         <th>User</th>
+        <th>Phone</th>
         <th>Status</th>
         <th>Placed At</th>
         <th>Return Requested</th>
@@ -11,15 +26,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let order of orders">
+      <tr *ngFor="let order of filteredOrders">
         <td>{{ order.userId?.userName || 'Unknown' }}</td>
+        <td>{{ order.userId?.phoneNumber || 'N/A' }}</td>
         <td>{{ order.status }}</td>
-        <td>{{ order.placedAt | date:'medium' }}</td>
+        <td>{{ order.placedAt | date: 'medium' }}</td>
         <td>{{ order.returnRequested ? 'Yes' : 'No' }}</td>
         <td>
-          <button class="btn btn-primary btn-sm" (click)="goToDetails(order._id)">
-            View
-          </button>
+          <button class="btn btn-primary btn-sm" (click)="goToDetails(order._id)">View</button>
         </td>
       </tr>
     </tbody>

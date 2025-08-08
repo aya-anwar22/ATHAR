@@ -38,28 +38,19 @@ export class HandleProfileByAdminComponent implements OnInit {
     return this.filterType === 'deleted' ? this.deletedUsers : this.activeUsers;
   }
 
-  get currentPagination() {
-    return {
-      currentPage: this.currentPage,
-      totalPages: this.totalPages
-    };
-  }
-
   loadUsers(): void {
     this.loading = true;
     const isDeleted = this.filterType === 'deleted';
 
     this.adminService.getUsers(this.currentPage, this.limit, isDeleted, this.searchTerm).subscribe({
-      next: (res) => {
+      next: ({ users, total, totalPages }) => {
         if (isDeleted) {
-          this.deletedUsers = res.deletedUsers?.dataDeleted || [];
-          this.totalUsers = res.deletedUsers?.total || 0;
-          this.totalPages = res.deletedUsers?.totalPages || 1;
+          this.deletedUsers = users;
         } else {
-          this.activeUsers = res.activeUsers?.dataActive || [];
-          this.totalUsers = res.activeUsers?.total || 0;
-          this.totalPages = res.activeUsers?.totalPages || 1;
+          this.activeUsers = users;
         }
+        this.totalUsers = total;
+        this.totalPages = totalPages;
         this.loading = false;
       },
       error: (err) => {
@@ -127,18 +118,19 @@ export class HandleProfileByAdminComponent implements OnInit {
     }
   }
 
-  confirmRestore(userId: string): void {
-    if (confirm('Are you sure you want to restore this user?')) {
-      this.adminService.deleteUser(userId).subscribe({
-        next: () => {
-          alert('User restored successfully');
-          this.loadUsers();
-        },
-        error: (err) => {
-          alert('Failed to restore user');
-          console.error(err);
-        }
-      });
-    }
+ confirmRestore(userId: string): void {
+  if (confirm('Are you sure you want to restore this user?')) {
+    this.adminService.restoreUser(userId).subscribe({
+      next: () => {
+        alert('User restored successfully');
+        this.loadUsers();
+      },
+      error: (err) => {
+        alert('Failed to restore user');
+        console.error(err);
+      }
+    });
   }
+}
+
 }

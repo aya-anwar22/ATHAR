@@ -18,18 +18,24 @@ export class LogoutComponent implements OnInit {
     this.logout();
   }
 
-  logout() {
-    this.http.post('http://localhost:3000/v1/auth/logout', {}, { withCredentials: true })
-      .subscribe({
-        next: () => {
-          localStorage.removeItem('accessToken');
-          this.router.navigate(['/login']);
-        },
-        error: (err) => {
-          console.error('Logout failed', err);
-          localStorage.removeItem('accessToken');
-          this.router.navigate(['/login']);
-        }
-      });
-  }
+logout(): void {
+  console.log("Logging out...");
+  const refreshToken = localStorage.getItem('refreshToken');
+  console.log(refreshToken || null); // 👈 دي المفروض تطبع token أو null
+
+  // بعدها تحذفي البيانات:
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('accessToken');
+
+  this.router.navigate(['/login']);
+}
+
+
+clearTokensAndRedirect() {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  // this.router.navigate(['/login']);
+}
+
+
 }

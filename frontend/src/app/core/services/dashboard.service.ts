@@ -16,7 +16,7 @@ export interface DashboardData {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:3000/api/v1/dashboard';
+  private apiUrl = 'https://athar-4yleiuf7p-aya-anwar-372ab2cd.vercel.app/api/v1/dashboard';
 
   constructor(private http: HttpClient) {}
 

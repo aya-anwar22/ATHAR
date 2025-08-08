@@ -1,93 +1,188 @@
-<!-- <div class="container mt-4">
-  <h2 class="mb-3 text-center">{{ isEdit ? 'Update' : 'Create' }} Product</h2>
-
-  <form [formGroup]="form" (ngSubmit)="submitForm()" enctype="multipart/form-data" class="mb-4 border p-3 bg-light rounded shadow-sm">
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Product Name</label>
-        <input type="text" formControlName="productName" class="form-control" />
+<div class="admin-product-container">
+  <!-- Notification Message -->
+  <div class="notification-wrapper" *ngIf="showMessage">
+    <div class="notification {{messageType}}">
+      <div class="notification-content">
+        <i class="icon" [ngClass]="{
+          'fas fa-check-circle': messageType === 'success',
+          'fas fa-exclamation-circle': messageType === 'error',
+          'fas fa-info-circle': messageType === 'info'
+        }"></i>
+        <span>{{message}}</span>
       </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Price</label>
-        <input type="number" formControlName="price" class="form-control" />
+      <div class="progress-bar" *ngIf="messageType === 'info'">
+        <div class="progress" [style.width.%]="progressValue"></div>
       </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Quantity</label>
-        <input type="number" formControlName="quantity" class="form-control" />
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Gender</label>
-        <select formControlName="gender" class="form-control">
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Stock Alert Threshold</label>
-        <input type="number" formControlName="stockAlertThreshold" class="form-control" />
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Brand</label>
-        <select formControlName="brandId" class="form-control">
-          <option value="">Select Brand</option>
-          <option *ngFor="let brand of brands" [value]="brand._id">{{ brand.brandName }}</option>
-        </select>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">SubCategory</label>
-        <select formControlName="subcategoryId" class="form-control">
-          <option value="">Select SubCategory</option>
-          <option *ngFor="let sub of subcategories" [value]="sub._id">{{ sub.subcategoryName }}</option>
-        </select>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Product Image</label>
-        <input type="file" (change)="handleImageChange($event)" class="form-control" />
-      </div>
+      <button class="close-btn" (click)="hideMessage()">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-    <div class="text-end">
-      <button type="submit" class="btn btn-success me-2">{{ isEdit ? 'Update' : 'Create' }}</button>
-      <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
-    </div>
-  </form>
+  </div>
 
-  <div class="text-end mb-3">
-    <button class="btn btn-outline-primary" (click)="toggleView()">
-      Show {{ isDeletedView ? 'Active' : 'Deleted' }} Products
+  <div class="header-actions">
+    <!-- Show Deleted Products Button - appears only when isDeletedView = false -->
+    <button class="toggle-view-btn" (click)="showDeletedProducts()" *ngIf="!isDeletedView">
+      <i class="fas fa-eye-slash"></i>
+      View Deleted Products
+    </button>
+
+    <!-- Show Active Products Button - appears only when isDeletedView = true -->
+    <button class="toggle-view-btn" (click)="showActiveProducts()" *ngIf="isDeletedView">
+      <i class="fas fa-eye"></i>
+      View Active Products
+    </button>
+
+    <button class="create-btn" (click)="isCreating = true" *ngIf="!isEdit && !isDeletedView">
+      <i class="fas fa-plus"></i> Create New Product
     </button>
   </div>
 
-  <div class="row">
-    <div class="col-md-4 mb-3" *ngFor="let product of products">
-      <div class="card h-100 shadow-sm">
-        <img [src]="product.productImages[0]" class="card-img-top" style="height: 200px; object-fit: contain;" />
-        <div class="card-body">
-  <h5 class="card-title">{{ product.productName }}</h5>
-  <p class="card-text">Price: {{ product.price }} EGP</p>
-  <p class="card-text">Quantity: {{ product.quantity }}</p>
-  <p class="card-text">Gender: {{ product.gender }}</p>
-
-  <button *ngIf="!isDeletedView" class="btn btn-warning btn-sm me-2" (click)="editProduct(product)">Edit</button>
-  <button *ngIf="!isDeletedView" class="btn btn-danger btn-sm" (click)="deleteProduct(product._id)">Delete</button>
-  <button *ngIf="isDeletedView" class="btn btn-success btn-sm" (click)="restoreProduct(product._id)">Restore</button>
-</div>
-
+  <!-- Product Form -->
+  <div class="form-section" *ngIf="isEdit || isCreating">
+    <h2>{{ isEdit ? 'Edit Product' : 'Create Product' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="product-form">
+      <div class="form-group">
+        <label for="productName">Product Name *</label>
+        <input type="text" id="productName" formControlName="productName" class="form-input">
+        <span class="error-message" *ngIf="form.get('productName')?.invalid && form.get('productName')?.touched">
+          Product name is required
+        </span>
       </div>
-    </div>
+
+      <div class="form-group">
+        <label for="collectionsSlug">Collection *</label>
+        <select id="collectionsSlug" formControlName="collectionsSlug" class="form-input">
+          <option value="">Select Collection</option>
+          <option *ngFor="let col of collections" [value]="col.collectionSlug">
+            {{ col.collectionName }}
+          </option>
+        </select>
+        <span class="error-message" *ngIf="form.get('collectionsSlug')?.invalid && form.get('collectionsSlug')?.touched">
+          Collection is required
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price *</label>
+          <input type="number" id="price" formControlName="price" class="form-input" min="0">
+          <span class="error-message" *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+            Valid price is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="quantity">Quantity *</label>
+          <input type="number" id="quantity" formControlName="quantity" class="form-input" min="0">
+          <span class="error-message" *ngIf="form.get('quantity')?.invalid && form.get('quantity')?.touched">
+            Valid quantity is required
+          </span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender">Gender *</label>
+          <select id="gender" formControlName="gender" class="form-input">
+            <option value="unisex">Unisex</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="stockAlertThreshold">Stock Alert *</label>
+          <input type="number" id="stockAlertThreshold" formControlName="stockAlertThreshold" class="form-input" min="0">
+          <span class="error-message" *ngIf="form.get('stockAlertThreshold')?.invalid && form.get('stockAlertThreshold')?.touched">
+            Valid threshold is required
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Product Images</label>
+        <div class="file-upload-wrapper">
+          <label for="productImages" class="file-upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Choose Images</span>
+            <input type="file" id="productImages" (change)="handleImageChange($event)" multiple accept="image/*">
+          </label>
+        </div>
+        <div class="image-preview-grid">
+          <div class="image-preview-item" *ngFor="let img of previewImages">
+            <img [src]="img" alt="Product preview">
+            <button type="button" class="remove-image-btn" (click)="removeImage(img)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" [disabled]="form.invalid">
+          <i class="fas" [class.fa-save]="isEdit" [class.fa-plus]="!isEdit"></i>
+          {{ isEdit ? 'Update' : 'Create' }}
+        </button>
+        <button type="button" (click)="resetForm()" class="cancel-btn">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </form>
   </div>
 
-  <nav class="mt-3" *ngIf="totalPages > 1">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="page === 1">
-        <button class="page-link" (click)="prevPage()">Previous</button>
-      </li>
-      <li class="page-item disabled">
-        <span class="page-link">{{ page }} / {{ totalPages }}</span>
-      </li>
-      <li class="page-item" [class.disabled]="page === totalPages">
-        <button class="page-link" (click)="nextPage()">Next</button>
-      </li>
-    </ul>
-  </nav>
-</div> -->
+  <!-- Products Table -->
+  <div class="products-table">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Collection</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Gender</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prod of products">
+            <td>{{ prod.productName }}</td>
+            <td>{{ prod.collectionId?.collectionsName }}</td>
+            <td>{{ prod.price | currency }}</td>
+            <td [class.low-stock]="prod.quantity <= prod.stockAlertThreshold">{{ prod.quantity }}</td>
+            <td>{{ prod.gender | titlecase }}</td>
+            <td class="actions">
+              <button (click)="editProduct(prod)" class="edit-btn" title="Edit" *ngIf="!isDeletedView">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button 
+                (click)="isDeletedView ? restoreProduct(prod.productSlug) : deleteProduct(prod.productSlug)" 
+                class="action-btn"
+                [class.delete-btn]="!isDeletedView"
+                [class.restore-btn]="isDeletedView"
+                [title]="isDeletedView ? 'Restore' : 'Delete'">
+                <i [class]="isDeletedView ? 'fas fa-trash-restore' : 'fas fa-trash'"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="products.length === 0">
+            <td colspan="6" class="empty-table">
+              <i class="fas fa-box-open"></i>
+              <p>No {{isDeletedView ? 'deleted' : ''}} products found</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button (click)="goToPage(page - 1)" [disabled]="page === 1" class="pagination-btn">
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+      <span class="page-info">Page {{ page }} of {{ totalPages }}</span>
+      <button (click)="goToPage(page + 1)" [disabled]="page === totalPages" class="pagination-btn">
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

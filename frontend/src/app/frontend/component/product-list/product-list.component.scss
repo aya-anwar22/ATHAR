@@ -1,0 +1,327 @@
+/* Color Variables */
+$primary-color: #e0a800; // Primary gold color
+$secondary-color: #b47d49; // Brown color
+$text-color: #ffffff; // White text color
+$hover-color: #f8d568; // Light gold hover color
+$border-color: rgba(224, 168, 0, 0.3); // Transparent border color
+$background-dark: #1a1a1a;
+$background-light: #2a2a2a;
+$disabled-color: #555555;
+
+.product-container {
+  padding: 2rem;
+  color: $text-color;
+  position: relative;
+  background-color: transparent;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.header {
+  color: $primary-color;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.no-products {
+  text-align: center;
+  color: $secondary-color;
+  font-size: 1.2rem;
+  padding: 2rem 0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.product-card {
+  background: $background-light;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(224, 168, 0, 0.2);
+    border-color: $hover-color;
+  }
+}
+
+.image-container {
+  height: 200px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+
+  .product-card:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.product-details {
+  padding: 1.5rem;
+
+  .product-name {
+    color: $primary-color;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    min-height: 3rem;
+  }
+
+  .product-price {
+    color: $text-color;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .product-collection {
+    color: $secondary-color;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.product-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    i {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.add-to-cart-btn {
+  background-color: $primary-color;
+  color: #000;
+
+  &:hover:not(:disabled) {
+    background-color: $hover-color;
+  }
+
+  &:disabled {
+    background-color: $disabled-color;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.view-details-btn {
+  background-color: transparent;
+  border: 1px solid $primary-color !important;
+  color: $primary-color;
+
+  &:hover {
+    background-color: rgba($primary-color, 0.1);
+  }
+}
+
+/* Modal Styles */
+.product-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  overflow-y: auto;
+
+  &.show {
+    display: block;
+  }
+}
+
+.modal-content {
+  background-color: $background-light;
+  margin: 5% auto;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 800px;
+  position: relative;
+  animation: modalFadeIn 0.3s;
+  border: 1px solid $border-color;
+}
+
+.close-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 28px;
+  color: $primary-color;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $hover-color;
+  }
+}
+
+.selected-header {
+  color: $primary-color;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.selected-content {
+  display: flex;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.selected-image {
+  flex: 1;
+  
+  .main-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid $border-color;
+  }
+}
+
+.selected-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+
+    strong {
+      color: $primary-color;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}
+
+.close-modal-btn {
+  background-color: transparent;
+  border: 1px solid $secondary-color !important;
+  color: $secondary-color;
+
+  &:hover {
+    background-color: rgba($secondary-color, 0.1);
+  }
+}
+
+/* See More Button */
+.see-more-btn {
+  background-color: $primary-color;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: $hover-color;
+    transform: translateY(-2px);
+  }
+
+  &.top-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .selected-content {
+    flex-direction: column;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .see-more-btn.top-right {
+    position: relative;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+}

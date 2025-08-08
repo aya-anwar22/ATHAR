@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Review {
@@ -12,14 +12,25 @@ export interface Review {
   updatedAt: string;
 }
 
+export interface ReviewsResponse {
+  data: Review[];
+  total: number;
+  currentPage: number;
+  totalPages: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminReviewService {
   private baseUrl = 'http://localhost:3000/api/v1/review';
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.baseUrl}/admin`);
+  getAll(page: number, limit: number): Observable<ReviewsResponse> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get<ReviewsResponse>(`${this.baseUrl}/admin`, { params });
   }
 
   approve(id: string): Observable<{ message: string }> {

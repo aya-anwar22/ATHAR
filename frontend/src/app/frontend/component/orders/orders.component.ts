@@ -1,16 +1,20 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserOrderService } from '../../../core/services/user-order.service';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms'; // لازم لـ ngModel
 
 @Component({
   standalone: true,
   selector: 'app-orders',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './orders.component.html',
 })
 export class OrdersComponent implements OnInit {
-  orders: any[] = [];
+  allOrders: any[] = [];  // كل الطلبات من السيرفر
+  orders: any[] = [];     // الطلبات اللي هتعرضها بعد الفلترة
+  selectedStatus: string = '';
 
   constructor(private orderService: UserOrderService) {}
 
@@ -21,10 +25,19 @@ export class OrdersComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getAllOrders().subscribe({
       next: (res) => {
-        this.orders = res;
+        this.allOrders = res;
+        this.filterOrders(); // نفذ فلترة مبدئية
       },
       error: () => alert('Failed to load orders'),
     });
+  }
+
+  filterOrders(): void {
+    if (!this.selectedStatus) {
+      this.orders = this.allOrders;
+    } else {
+      this.orders = this.allOrders.filter(order => order.status === this.selectedStatus);
+    }
   }
 
   cancelOrder(orderId: string): void {
@@ -50,4 +63,14 @@ export class OrdersComponent implements OnInit {
       });
     }
   }
+
+  getOrderTotal(order: any): number {
+  return order.items.reduce((total: number, item: any) => {
+    return total + (item.quantity * item.priceAtOrderTime);
+  }, 0);
 }
+
+}
+
+
+

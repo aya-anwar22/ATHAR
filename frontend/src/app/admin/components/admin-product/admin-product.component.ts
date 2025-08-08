@@ -1,147 +1,278 @@
-// import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-// import { CommonModule } from '@angular/common';
-// import { AdminProductService } from '../../../core/services/admin-product.service';
-// import { Product } from '../../../core/models/product.model';
-// import { AdminBrandService } from '../../../core/services/admin-collection.service';
-// import { AdminSubCategoryService } from '../../../core/services/admin-subcategory.service';
-// import { Brand } from '../../../core/models/collections .model';
-// import { SubCategory } from '../../../core/models/subcategory.model';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { timer } from 'rxjs';
+import { ProductService } from '../../../core/services/product.service';
+import { CollectionService } from '../../../core/services/collection.service';
+import { Product } from '../../../core/models/product.model';
+import { Collection } from '../../../core/models/collections.model';
 
-// @Component({
-//   selector: 'app-admin-product',
-//   standalone: true,
-//   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-//   templateUrl: './admin-product.component.html',
-//   styleUrl: './admin-product.component.scss'
+@Component({
+  selector: 'app-admin-product',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './admin-product.component.html',
+  styleUrls: ['./admin-product.component.scss']
+})
+export class AdminProductComponent implements OnInit {
+  form!: FormGroup;
+  products: Product[] = [];
+  collections: Collection[] = [];
+  selectedImages: File[] = [];
+  previewImages: string[] = [];
+  isEdit = false;
+  isCreating = false;
+  editingSlug: string | null = null;
+  editingProduct: Product | null = null;
+  isDeletedView = false;
+  page = 1;
+  limit = 10;
+  totalPages = 1;
+  message = '';
+  messageType: 'success' | 'error' | 'info' = 'info';
+  showMessage = false;
+  progressValue = 0;
+  private progressInterval: any;
 
-// })
-// export class AdminProductComponent implements OnInit {
-//   form!: FormGroup;
-//   products: Product[] = [];
-//   brands: Brand[] = [];
-//   subcategories: SubCategory[] = [];
-//   selectedImage: File | null = null;
-//   isEdit = false;
-//   editingId: string | null = null;
-//   isDeletedView = false;
-//   page = 1;
-//   limit = 5;
-//   totalPages = 1;
+  constructor(
+    private productService: ProductService,
+    private collectionService: CollectionService,
+    private fb: FormBuilder
+  ) {}
 
-//   constructor(
-//     private fb: FormBuilder,
-//     private productService: AdminProductService,
-//     private brandService: AdminBrandService,
-//     private subCategoryService: AdminSubCategoryService
-//   ) { }
+  ngOnInit(): void {
+    this.initForm();
+    this.loadCollections();
+    this.loadProducts();
+  }
 
-//   ngOnInit(): void {
-//     this.form = this.fb.group({
-//       productName: [''],
-//       price: [''],
-//       quantity: [''],
-//       gender: [''],
-//       stockAlertThreshold: [''],
-//       brandId: [''],
-//       subcategoryId: [''],
-//     });
+  initForm() {
+    this.form = this.fb.group({
+      productName: ['', Validators.required],
+      collectionsSlug: ['', Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
+      quantity: [0, [Validators.required, Validators.min(0)]],
+      gender: ['unisex', Validators.required],
+      stockAlertThreshold: [1, [Validators.required, Validators.min(0)]]
+    });
+  }
 
-//     this.loadProducts();
-//     this.loadBrands();
-//     this.loadSubCategories();
-//   }
+  loadCollections() {
+    this.collectionService.getAllCollections(1, 100, false, '').subscribe({
+      next: (res) => {
+        const data = res.activeCollections.dataActive;
+        this.collections = data.map((item: any) => ({
+          collectionName: item.collectionsName,
+          collectionSlug: item.collectionsSlug,
+          collectionImage: item.collectionsImage,
+          _id: item._id
+        }));
+      },
+      error: (err) => this.showErrorMessage('Failed to load collections')
+    });
+  }
 
-//   loadProducts(): void {
-//     this.productService.getAll(this.page, this.limit, this.isDeletedView, '').subscribe(res => {
-//       this.products = this.isDeletedView ? res.deletedProduct.dataDeleted : res.activeProduct.dataActive;
-//       this.totalPages = this.isDeletedView ? res.deletedProduct.totalPages : res.activeProduct.totalPages;
-//     });
-//   }
+  loadProducts() {
+    this.showProgressMessage('Loading products...');
+    this.productService.getAll(this.page, this.limit, this.isDeletedView, '').subscribe({
+      next: (res) => {
+        console.log('res', res)
+        const raw = this.isDeletedView ? res.deletedProduct.dataDeleted : res.activeProduct.dataActive;
+        this.products = raw;
+        this.totalPages = this.isDeletedView
+          ? res.deletedProduct.totalPages
+          : res.activeProduct.totalPages;
+        this.hideMessage();
+      },
+      error: () => this.showErrorMessage('Failed to load products')
+    });
+  }
 
-//   loadBrands(): void {
-//     this.brandService.getAllBrands(1, 50, false, '').subscribe(res => {
-//       this.brands = res.activeBrands.dataActive;
-//     });
-//   }
+  showActiveProducts() {
+    this.isDeletedView = false;
+    this.page = 1;
+    this.resetForm();
+    this.loadProducts();
+  }
 
-//   loadSubCategories(): void {
-//     this.subCategoryService.getAllSubCategories().subscribe(res => {
-//       this.subcategories = res.activeSubCategory.dataActive;
-//     });
-//   }
+  showDeletedProducts() {
+    this.isDeletedView = true;
+    this.page = 1;
+    this.resetForm();
+    this.loadProducts();
+  }
 
-//   handleImageChange(event: any): void {
-//     this.selectedImage = event.target.files[0];
-//   }
+  handleImageChange(event: any) {
+    const files: FileList = event.target.files;
+    this.selectedImages = Array.from(files);
+    this.previewImages = [];
+    
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewImages.push(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
-//   submitForm(): void {
-//     const formData = new FormData();
-//     const formValue = this.form.value;
-//     for (let key in formValue) {
-//       formData.append(key, formValue[key]);
-//     }
-//     if (this.selectedImage) {
-//       formData.append('productImages', this.selectedImage);
-//     }
+  removeImage(image: string) {
+    const index = this.previewImages.indexOf(image);
+    if (index !== -1) {
+      this.previewImages.splice(index, 1);
+      this.selectedImages.splice(index, 1);
+    }
+  }
 
-//     if (this.isEdit && this.editingId) {
-//       this.productService.update(this.editingId, formData).subscribe(() => {
-//         this.resetForm();
-//         this.loadProducts();
-//       });
-//     } else {
-//       this.productService.create(formData).subscribe(() => {
-//         this.resetForm();
-//         this.loadProducts();
-//       });
-//     }
-//   }
+  submitForm() {
+    if (this.form.invalid) {
+      this.showErrorMessage('Please fill all required fields');
+      return;
+    }
 
-//   editProduct(product: Product): void {
-//     this.isEdit = true;
-//     this.editingId = product._id;
-//     this.form.patchValue(product);
-//   }
+    const formData = new FormData();
+    formData.append('productName', this.form.value.productName);
+    formData.append('collectionsSlug', this.form.value.collectionsSlug);
+    formData.append('price', this.form.value.price.toString());
+    formData.append('quantity', this.form.value.quantity.toString());
+    formData.append('gender', this.form.value.gender);
+    formData.append('stockAlertThreshold', this.form.value.stockAlertThreshold.toString());
 
-//   deleteProduct(id: string): void {
-//     if (confirm('Are you sure you want to delete this product?')) {
-//       this.productService.delete(id).subscribe(() => this.loadProducts());
-//     }
-//   }
+    this.selectedImages.forEach(file => {
+      formData.append('productImages', file);
+    });
 
-//   restoreProduct(id: string): void {
-//     if (confirm('Are you sure you want to restore this product?')) {
-//       this.productService.restore(id).subscribe(() => {
-//         this.loadProducts();
-//       });
-//     }
-//   }
+    this.showProgressMessage(this.isEdit ? 'Updating product...' : 'Creating product...');
 
-//   toggleView(): void {
-//     this.isDeletedView = !this.isDeletedView;
-//     this.page = 1;
-//     this.loadProducts();
-//   }
+    const operation = this.isEdit && this.editingSlug
+      ? this.productService.update(this.editingSlug, formData)
+      : this.productService.create(formData);
 
-//   resetForm(): void {
-//     this.form.reset();
-//     this.selectedImage = null;
-//     this.isEdit = false;
-//     this.editingId = null;
-//   }
+    operation.subscribe({
+      next: () => {
+        this.showSuccessMessage(this.isEdit ? 'Product updated successfully' : 'Product created successfully');
+        this.resetForm();
+        this.loadProducts();
+      },
+      error: (err) => {
+        if (err.status === 400 && err.error.message) {
+          this.showErrorMessage(err.error.message);
+        } else {
+          this.showErrorMessage(this.isEdit ? 'Failed to update product' : 'Failed to create product');
+        }
+      }
+    });
+  }
 
-//   nextPage(): void {
-//     if (this.page < this.totalPages) {
-//       this.page++;
-//       this.loadProducts();
-//     }
-//   }
+  editProduct(product: Product) {
+    this.isEdit = true;
+    this.isCreating = false;
+    this.editingSlug = product.productSlug;
+    this.editingProduct = product;
+    this.previewImages = [...product.productImages];
 
-//   prevPage(): void {
-//     if (this.page > 1) {
-//       this.page--;
-//       this.loadProducts();
-//     }
-//   }
-// }
+    this.form.patchValue({
+      productName: product.productName,
+      collectionsSlug: product.collectionId?.collectionsSlug,
+      price: product.price,
+      quantity: product.quantity,
+      gender: product.gender,
+      stockAlertThreshold: product.stockAlertThreshold
+    });
+  }
+
+  deleteProduct(slug: string) {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.showProgressMessage('Deleting product...');
+      this.productService.delete(slug).subscribe({
+        next: () => {
+          this.showSuccessMessage('Product deleted successfully');
+          this.loadProducts();
+        },
+        error: () => this.showErrorMessage('Failed to delete product')
+      });
+    }
+  }
+
+  restoreProduct(slug: string) {
+    if (confirm('Are you sure you want to restore this product?')) {
+      this.showProgressMessage('Restoring product...');
+      this.productService.restore(slug).subscribe({
+        next: () => {
+          this.showSuccessMessage('Product restored successfully');
+          this.loadProducts();
+        },
+        error: () => this.showErrorMessage('Failed to restore product')
+      });
+    }
+  }
+
+  resetForm() {
+    this.form.reset({
+      gender: 'unisex',
+      price: 0,
+      quantity: 0,
+      stockAlertThreshold: 1
+    });
+    this.selectedImages = [];
+    this.previewImages = [];
+    this.isEdit = false;
+    this.isCreating = false;
+    this.editingSlug = null;
+    this.editingProduct = null;
+  }
+
+  goToPage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.loadProducts();
+    }
+  }
+
+  showProgressMessage(text: string) {
+    this.message = text;
+    this.messageType = 'info';
+    this.showMessage = true;
+    this.startProgressBar();
+  }
+
+  showSuccessMessage(text: string) {
+    this.message = text;
+    this.messageType = 'success';
+    this.showMessage = true;
+    this.stopProgressBar();
+    this.autoHideMessage();
+  }
+
+  showErrorMessage(text: string) {
+    this.message = text;
+    this.messageType = 'error';
+    this.showMessage = true;
+    this.stopProgressBar();
+    this.autoHideMessage(5000);
+  }
+
+  hideMessage() {
+    this.showMessage = false;
+    this.stopProgressBar();
+  }
+
+  private autoHideMessage(delay = 3000) {
+    timer(delay).subscribe(() => this.hideMessage());
+  }
+
+  private startProgressBar() {
+    this.progressValue = 0;
+    this.progressInterval = setInterval(() => {
+      this.progressValue += 5;
+      if (this.progressValue >= 100) this.progressValue = 100;
+    }, 200);
+  }
+
+  private stopProgressBar() {
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+      this.progressInterval = null;
+    }
+  }
+}

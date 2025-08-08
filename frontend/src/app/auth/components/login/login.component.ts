@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
           const refreshToken = res.refreshToken;
 
           localStorage.setItem('accessToken', accessToken);
-          // localStorage.setItem('refreshToken', refreshToken);
+          localStorage.setItem('refreshToken', refreshToken);
 
           this.errorMessage = null; // ✅ لو نجح امسح الرسالة
 

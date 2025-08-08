@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './frontend/layout/layout.component';
 import { AdminlayoutComponent } from './admin/adminlayout/adminlayout.component';
-import { CategoryDetailComponent } from './frontend/component/category-detail/category-detail.component';
 import { AdminGuard } from './core/guards/admin.guard';
 import { UserGuard } from './core/guards/user.guard';
 
@@ -68,17 +67,9 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./frontend/component/profile/profile.component').then(m => m.ProfileComponent),
       },
-      {
-        path: 'categories',
-        loadComponent: () =>
-          import('./frontend/component/category/category.component').then(m => m.CategoryComponent),
-      },
-      {
-        path: 'category/:id',
-        loadComponent: () =>
-          import('./frontend/component/category-detail/category-detail.component').then(m => m.CategoryDetailComponent),
-      },
 
+    
+     
 
 
       {
@@ -97,17 +88,12 @@ export const routes: Routes = [
       {
         path: 'products',
         loadComponent: () =>
-          import('./frontend/component/product/product.component').then(m => m.ProductComponent),
+          import('./frontend/component/product-list/product-list.component').then(m => m.ProductListComponent),
       },
 
 
 
-      {
-        path: 'product/:id',
-        loadComponent: () =>
-          import('./frontend/component/product-detail/product-detail.component').then(m => m.ProductDetailComponent),
-      },
-
+      
 
       {
         path: 'testimonials',
@@ -156,9 +142,10 @@ export const routes: Routes = [
           import('./admin/components/dashboard/dashboard.component').then(m => m.DashboardComponent),
       },
 
-      {
+    {
         path: 'profile',
-        loadComponent: () => import('./frontend/component/profile/profile.component').then(m => m.ProfileComponent)
+        loadComponent: () =>
+          import('./admin/components/profile/profile.component').then(m => m.ProfileComponent),
       },
 
       {
@@ -195,11 +182,11 @@ export const routes: Routes = [
           import('./admin/components/admin-sub-category/admin-sub-category.component').then(m => m.AdminSubCategoryComponent),
       },
 
-      // {
-      //   path: 'products',
-      //   loadComponent: () =>
-      //     import('./admin/components/admin-product/admin-product.component').then(m => m.AdminProductComponent),
-      // },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./admin/components/admin-product/admin-product.component').then(m => m.AdminProductComponent),
+      },
 
 
       {

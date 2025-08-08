@@ -28,7 +28,7 @@
           </div>
           <div class="order-status">
             <span class="badge" [ngClass]="{
-              'bg-warning': order.status === 'processing',
+              'bg-warning': order.status === 'preparing',
               'bg-info': order.status === 'shipped',
               'bg-success': order.status === 'delivered',
               'bg-danger': order.status === 'cancelled'
@@ -105,8 +105,6 @@
                   <img [src]="item.productId?.productImages[0]" class="img-thumbnail" width="60" [alt]="item.productId?.productName">
                 </div>
                 <div>
-                             
-
                   <h6 class="mb-1">{{ item.productId?.productName }}</h6>
                   <small class="text-muted">SKU: {{ item.productId?.sku || 'N/A' }}</small>
                 </div>
@@ -119,6 +117,11 @@
               <span class="fw-bold">{{ item.priceAtOrderTime }} EGP</span>
             </div>
           </div>
+        </div>
+
+        <!-- Order Total -->
+        <div class="order-total text-end mb-3">
+          <h5>Total: {{ getOrderTotal(order) }} EGP</h5>
         </div>
 
         <!-- Order Actions -->
@@ -139,11 +142,12 @@
             <i class="bi bi-arrow-counterclockwise me-1"></i> Request Return
           </button>
 
-          <button class="btn btn-outline-secondary btn-sm ms-auto">
+          <!-- <button class="btn btn-outline-secondary btn-sm ms-auto">
             <i class="bi bi-printer me-1"></i> Print Invoice
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
   </div>
 </section>
+

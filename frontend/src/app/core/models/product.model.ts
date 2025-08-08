@@ -1,19 +1,23 @@
 export interface Product {
-  _id: string;
+  _id?: string;
   productName: string;
   productSlug: string;
-  brandId: string;
-  subcategoryId: string;
+  collectionId: {
+    _id: string;
+    collectionsSlug: string;
+    collectionsName: string;
+  };
   price: number;
   quantity: number;
-  gender: string;
+  gender: 'male' | 'female' | 'unisex';
   productImages: string[];
   stockAlertThreshold: number;
-  isDeleted: boolean;
-  deletedAt: string | null;
-  deletedBy: string | null;
-  createdAt: string;
-  updatedAt: string;
+  isDeleted?: boolean;
+  deletedAt?: string;
+  deletedBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }
 
 export interface ProductPaginationResponse {
@@ -30,43 +34,3 @@ export interface ProductPaginationResponse {
     dataDeleted: Product[];
   };
 }
-
-
-
-
-export interface UserProduct {
-  _id: string;
-  productName: string;
-    description?: string;
-
-  productSlug: string;
-  brandId: string;
-  subcategoryId: string;
-  price: number;
-  quantity: number;
-  gender: 'male' | 'female' | string;
-  productImages: string[];
-  stockAlertThreshold: number;
-  isDeleted: boolean;
-  deletedAt: string | null;
-  deletedBy: string | null;
-  originalPrice?: number;
-
-  createdAt: string;
-  updatedAt: string;
-  category?: {
-  _id: string;
-  categoryName: string;
-};
-
-}
-
-export interface ProductListResponse {
-  activeProdut: {
-    total: number;
-    currentPage: number;
-    totalPages: number;
-    dataActive: UserProduct[];
-  };
-}
-

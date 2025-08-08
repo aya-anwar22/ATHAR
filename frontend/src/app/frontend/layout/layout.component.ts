@@ -6,7 +6,7 @@ import { FooterComponent } from './shared/component/footer/footer.component';
 import { NavbarComponent } from './shared/component/navbar/navbar.component';
 import { HeroComponent } from '../pages/hero/hero.component';
 import { CollectionsFilterComponent } from '../pages/collection-filter/collections-filter.component';
-import { ProductTabsComponent } from '../pages/product-tabs/product-tabs.component';
+// import { ProductTabsComponent } from '../pages/product-tabs/product-tabs.component';
 
 
 @Component({

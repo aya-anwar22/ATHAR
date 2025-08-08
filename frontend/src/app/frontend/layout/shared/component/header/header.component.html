@@ -56,12 +56,22 @@
 
           <!-- Shopping Cart (visible only when logged in) -->
           <li class="nav-item cart-item" *ngIf="userName">
-            <a href="/cart" class="nav-link cart-link">
-              <i class="fas fa-shopping-cart"></i>
-              <span class="link-text">Cart</span>
-              <span class="cart-badge" id="cart-count-nav">0</span>
-            </a>
-          </li>
+  <a href="/cart" class="nav-link cart-link">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="link-text">Cart</span>
+    <span class="cart-badge" id="cart-count-nav" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+  </a>
+</li>
+
+
+          <li class="nav-item cart-item" *ngIf="userName">
+  <a href="/orders" class="nav-link cart-link">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="link-text">Your Order</span>
+    <span class="cart-badge" id="cart-count-nav" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+  </a>
+</li>
+
 
           <!-- Profile (visible only when logged in) -->
           <li class="nav-item profile-item" *ngIf="userName">

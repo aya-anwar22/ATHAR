@@ -1,0 +1,84 @@
+<div class="product-container">
+  <div class="header-container">
+    <h2 class="header">Our Products</h2>
+    <!-- زر See More في الأعلى على اليمين -->
+    <button *ngIf="isHomeView && products.length > 10" 
+            class="see-more-btn top-right"
+            (click)="navigateToProducts()">
+      See All Products
+    </button>
+  </div>
+
+  <div *ngIf="displayedProducts.length === 0" class="no-products">
+    No products found.
+  </div>
+
+  <div class="product-grid">
+    <div *ngFor="let product of displayedProducts" class="product-card">
+      <div class="image-container" (click)="viewProductDetails(product)">
+        <img [src]="product.productImages[0]" alt="{{ product.productName }}" class="product-image">
+      </div>
+      <div class="product-details">
+        <h4 class="product-name">{{ product.productName }}</h4>
+        <p class="product-price">{{ product.price }}$</p>
+        <p class="product-collection">{{ product.collectionId.collectionsName }}</p>
+
+        <!-- ✅ حالة المخزون -->
+        <p class="stock-status" *ngIf="getStockMessage(product.quantity)">
+          {{ getStockMessage(product.quantity) }}
+        </p>
+
+        <div class="product-actions">
+        <button 
+  class="add-to-cart-btn" 
+  [disabled]="product.quantity <= 0" 
+  (click)="addToCart(product, $event)">
+  <i class="fas fa-shopping-cart"></i> Add to Cart
+</button>
+
+
+
+          <button class="view-details-btn" (click)="viewProductDetails(product)">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- تفاصيل المنتج المحدد -->
+  <div *ngIf="selectedProduct" class="product-modal" [class.show]="selectedProduct">
+    <div class="modal-content">
+      <span class="close-btn" (click)="selectedProduct = null">&times;</span>
+      <h3 class="selected-header">{{ selectedProduct.productName }}</h3>
+      <div class="selected-content">
+        <div class="selected-image">
+          <img [src]="selectedProduct.productImages[0]" alt="{{ selectedProduct.productName }}" class="main-image">
+        </div>
+        <div class="selected-details">
+          <p><strong>Price:</strong> {{ selectedProduct.price }}$</p>
+          <p><strong>Gender:</strong> {{ selectedProduct.gender }}</p>
+          <p><strong>Collection:</strong> {{ selectedProduct.collectionId.collectionsName }}</p>
+          <p><strong>Description:</strong> {{ selectedProduct.description || 'No description available' }}</p>
+
+          <!-- ✅ حالة المخزون داخل المودال -->
+          <p class="stock-status" *ngIf="getStockMessage(selectedProduct.quantity)">
+            {{ getStockMessage(selectedProduct.quantity) }}
+          </p>
+
+          <div class="modal-actions">
+            <button class="add-to-cart-btn" 
+        [disabled]="selectedProduct.quantity <= 0"
+        (click)="addToCart(selectedProduct, $event)">
+  Add to Cart
+</button>
+
+            <button class="close-modal-btn" (click)="selectedProduct = null">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

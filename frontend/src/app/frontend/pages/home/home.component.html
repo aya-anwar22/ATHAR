@@ -1,28 +1,22 @@
 <app-hero></app-hero>
 
-<!-- ✅ هنا نعرض الكولكشنز -->
+<!-- Collections Section -->
 <app-collection></app-collection>
 
 <div class="container my-5">
   <div class="row">
     <div class="col-md-3">
       <app-collections-filter
-  (sortChange)="onSortChanged($event)"
-  (priceRangeChange)="onPriceRangeChanged($event)">
-</app-collections-filter>
-
+        (sortChange)="onSortChanged($event)"
+        (priceRangeChange)="onPriceRangeChanged($event)">
+      </app-collections-filter>
     </div>
-
     <div class="col-md-9">
-      <app-product-tabs 
-        [sortBy]="sortBy" 
-        [priceRange]="priceRange">
-      </app-product-tabs>
+      <app-product-list [isHomeView]="true"></app-product-list>
     </div>
   </div>
 </div>
 
 <app-review></app-review>
-<!-- <app-brand></app-brand> -->
 <app-user-about></app-user-about>
 <app-contact></app-contact>

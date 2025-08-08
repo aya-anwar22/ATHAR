@@ -9,7 +9,7 @@ import { UserProfile } from '../models/user.model';
   providedIn: 'root'
 })
 export class ProfileService {
-  private apiUrl = `${environment.apiUrl}/user`;
+  private apiUrl = `http://localhost:3000/api/v1/user`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
