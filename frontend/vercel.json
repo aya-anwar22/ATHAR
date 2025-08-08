@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "public": "frontend/dist/frontend",
   "builds": [
     {
       "src": "frontend/dist/frontend/**",
