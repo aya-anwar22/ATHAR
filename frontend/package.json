@@ -1,16 +1,14 @@
 {
   "name": "frontend",
   "version": "0.0.0",
-"scripts": {
-  "ng": "ng",
-  "start": "ng serve",
-  "build": "npx ng build --configuration production",
-  "vercel-build": "npm install --legacy-peer-deps && npm run build",
-  "watch": "npx ng build --watch --configuration development",
-  "test": "ng test"
-},
-
-
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "npx ng build --configuration production",
+    "vercel-build": "npm install --legacy-peer-deps && npm run build",
+    "watch": "npx ng build --watch --configuration development",
+    "test": "ng test"
+  },
   "private": true,
   "dependencies": {
     "@angular/cdk": "^19.2.19",
@@ -39,6 +37,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "sass": "^1.90.0",
     "typescript": "~5.7.2"
   }
 }
