@@ -7,7 +7,6 @@ import { ReviewComponent } from '../../component/review/review.component';
 import { ContactComponent } from '../../component/contact/contact.component';
 import { UserAboutComponent } from '../../component/user-about/user-about.component';
 import { CollectionComponent } from '../../component/collection/collection.component';
-import { CollectionsFilterComponent } from '../collection-filter/collections-filter.component';
 import { ProductListComponent } from '../../component/product-list/product-list.component';
 
 @Component({
@@ -22,7 +21,6 @@ import { ProductListComponent } from '../../component/product-list/product-list.
     ReviewComponent,
     ContactComponent,
     UserAboutComponent,
-    CollectionsFilterComponent,
     ProductListComponent
   ],
   templateUrl: './home.component.html'

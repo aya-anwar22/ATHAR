@@ -13,9 +13,10 @@
         height="200"
       />
       <h3>{{ collection.collectionName }}</h3>
-      <a [routerLink]="['/collections', collection.collectionSlug]">
-        View Products
-      </a>
+      <a [routerLink]="['/products']" [queryParams]="{ collectionsSlug: collection.collectionSlug }">
+  View Products
+</a>
+
     </div>
   </div>
 
