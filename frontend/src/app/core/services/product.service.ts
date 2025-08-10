@@ -6,7 +6,7 @@ import { Product, ProductPaginationResponse } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private baseUrl = `http://localhost:3000/api/v1/product`;
+  private baseUrl = `https://athar-snowy.vercel.app/api/v1/product`;
 
   constructor(private http: HttpClient) {}
 
