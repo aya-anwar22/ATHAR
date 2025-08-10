@@ -53,6 +53,7 @@ export class AdminProductComponent implements OnInit {
       price: [0, [Validators.required, Validators.min(0)]],
       quantity: [0, [Validators.required, Validators.min(0)]],
       gender: ['unisex', Validators.required],
+      description: [''] ,
       stockAlertThreshold: [1, [Validators.required, Validators.min(0)]]
     });
   }
@@ -137,6 +138,7 @@ export class AdminProductComponent implements OnInit {
     formData.append('quantity', this.form.value.quantity.toString());
     formData.append('gender', this.form.value.gender);
     formData.append('stockAlertThreshold', this.form.value.stockAlertThreshold.toString());
+    formData.append('description', this.form.value.description);
 
     this.selectedImages.forEach(file => {
       formData.append('productImages', file);
@@ -177,6 +179,7 @@ export class AdminProductComponent implements OnInit {
       price: product.price,
       quantity: product.quantity,
       gender: product.gender,
+      description: product.description,
       stockAlertThreshold: product.stockAlertThreshold
     });
   }

@@ -12,6 +12,7 @@ export interface Product {
   gender: 'male' | 'female' | 'unisex';
   productImages: string[];
   stockAlertThreshold: number;
+  description?:string;
   isDeleted?: boolean;
   deletedAt?: string;
   deletedBy?: string;
