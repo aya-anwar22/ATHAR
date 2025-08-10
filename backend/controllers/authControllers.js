@@ -182,7 +182,7 @@ exports.googleAuthCallback = async (req, res) => {
 
 // register
 exports.register = asyncHandler(async (req, res) => {
-  const { userName, email, password, confirmPassword } = req.body;
+  const { userName, phoneNumber, email, password, confirmPassword } = req.body;
 
   if (!email) {
     return res.status(400).json({
