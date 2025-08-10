@@ -26,10 +26,26 @@ interface IUser {
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly REFRESH_TOKEN_KEY = 'refreshToken';
+
   private readonly TOKEN_KEY = 'accessToken';
   private apiUrl = `https://athar-snowy.vercel.app/v1/auth`;
 
+setRefreshToken(token: string): void {
+  localStorage.setItem(this.REFRESH_TOKEN_KEY, token);
+}
 
+getRefreshToken(): string | null {
+  return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+}
+
+refreshToken(): Observable<{ accessToken: string }> {
+  const refreshToken = this.getRefreshToken();
+  return this.http.post<{ accessToken: string }>(
+    `${this.apiUrl}/refresh-token`,
+    { refreshToken }
+  );
+}
   private myUser = new BehaviorSubject<IUser | null>(null);
   public user$ = this.myUser.asObservable();
 
@@ -74,9 +90,7 @@ export class AuthService {
     return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/rest-password`, data);
   }
 
-  refreshToken(data: { refreshToken: string }): Observable<{ accessToken: string }> {
-    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/refresh-token`, data);
-  }
+
 
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
