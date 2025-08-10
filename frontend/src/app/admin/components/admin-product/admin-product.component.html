@@ -162,6 +162,7 @@
             <td>{{ prod.productName }}</td>
             <td>{{ prod.collectionId?.collectionsName }}</td>
             <td>{{ prod.price | currency }}</td>
+            <td>{{ prod.description }}</td>
             <td [class.low-stock]="prod.quantity <= prod.stockAlertThreshold">{{ prod.quantity }}</td>
             <td>{{ prod.gender | titlecase }}</td>
             <td class="actions">
