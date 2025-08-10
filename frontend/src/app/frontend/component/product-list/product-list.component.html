@@ -20,7 +20,7 @@
       </div>
       <div class="product-details">
         <h4 class="product-name">{{ product.productName }}</h4>
-        <p class="product-price">{{ product.price }}$</p>
+        <p class="product-price">{{ product.price }}</p>
         <p class="product-collection">{{ product.collectionId.collectionsName }}</p>
 
         <!-- ✅ حالة المخزون -->
@@ -56,7 +56,7 @@
           <img [src]="selectedProduct.productImages[0]" alt="{{ selectedProduct.productName }}" class="main-image">
         </div>
         <div class="selected-details">
-          <p><strong>Price:</strong> {{ selectedProduct.price }}$</p>
+          <p><strong>Price:</strong> {{ selectedProduct.price }}</p>
           <p><strong>Gender:</strong> {{ selectedProduct.gender }}</p>
           <p><strong>Collection:</strong> {{ selectedProduct.collectionId.collectionsName }}</p>
           <p><strong>Description:</strong> {{ selectedProduct.description || 'No description available' }}</p>
