@@ -19,6 +19,10 @@ export class SignUpComponent implements OnInit {
   signUpForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     userName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    phoneNumber: new FormControl('', [
+    Validators.required,
+    Validators.pattern(/^(01)[0-9]{9}$/) // مثال لرقم مصري
+  ]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     confirmPassword: new FormControl('', [Validators.required])
   }, { validators: passwordMatchValidator });
@@ -37,6 +41,8 @@ export class SignUpComponent implements OnInit {
 
       const data: SignupData = {
         userName: formValue.userName!,
+          phoneNumber: formValue.phoneNumber!, // 📌 أضفنا الحقل هنا
+
         email: formValue.email!,
         password: formValue.password!,
         confirmPassword: formValue.confirmPassword!

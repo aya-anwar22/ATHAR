@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let order of filteredOrders">
-        <td>{{ order.userId?.userName || 'Unknown' }}</td>
+<p><strong>User:</strong> {{ order.userId?.userName }} ({{ order.userId?.email }})</p>
         <td>{{ order.userId?.phoneNumber || 'N/A' }}</td>
         <td>{{ order.status }}</td>
         <td>{{ order.placedAt | date: 'medium' }}</td>

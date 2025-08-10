@@ -15,6 +15,16 @@
               <input type="text" class="form-control" id="username" placeholder="Your username" formControlName="userName" />
             </div>
 
+
+            <div class="mb-3">
+  <label for="phoneNumber" class="form-label">Phone Number</label>
+  <input type="tel" class="form-control" id="phoneNumber" placeholder="01xxxxxxxxx" formControlName="phoneNumber" />
+  <div class="text-danger" *ngIf="signUpForm.get('phoneNumber')?.invalid && signUpForm.get('phoneNumber')?.touched">
+    Please enter a valid phone number.
+  </div>
+</div>
+
+
             <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
               <input type="email" class="form-control" id="email" placeholder="example@email.com" formControlName="email" />
@@ -30,6 +40,7 @@
               <input type="password" class="form-control" id="confirmPassword" placeholder="Re-enter password" formControlName="confirmPassword" />
             </div>
 
+
             <div class="text-danger" *ngIf="signUpForm.errors?.['passwordMismatch']">
               Passwords do not match.
             </div>
@@ -40,7 +51,6 @@
           </form>
 
           <div class="or-divider my-3 text-center text-muted">or</div>
-
           <button
             (click)="signUpWithGoogle()"
             class="btn google-btn w-100 d-flex align-items-center justify-content-center gap-2"

@@ -1,16 +1,30 @@
 <div class="container mt-4" *ngIf="order">
   <h2>Order Details</h2>
-  <!-- <p><strong>User:</strong> {{ order.userId?.userName || 'Unknown' }} ({{ order.userId?.email }})</p> -->
+  <p><strong>User:</strong> {{ order.userId?.userName || 'Unknown' }} ({{ order.userId?.email }})</p>
   <p><strong>Status:</strong> {{ order.status }}</p>
   <p><strong>Payment Method:</strong> {{ order.paymentMethod }}</p>
   <p><strong>Placed At:</strong> {{ order.placedAt | date:'medium' }}</p>
 
-  <h4>Items:</h4>
-  <ul>
-    <li *ngFor="let item of order.items">
-      {{ item.productId?.productName || 'Deleted Product' }} - Quantity: {{ item.quantity }} - Price: {{ item.priceAtOrderTime }} EGP
-    </li>
-  </ul>
+<h4>Items:</h4>
+<ul>
+  <li *ngFor="let item of order.items">
+    <div>
+      <strong>{{ item.productId?.productName || 'Deleted Product' }}</strong>  
+      - Quantity: {{ item.quantity }}  
+      - Price: {{ item.priceAtOrderTime }} EGP
+    </div>
+    
+    <!-- صور المنتج -->
+    <div class="d-flex flex-wrap mt-2" *ngIf="item.productId?.productImages?.length">
+      <img *ngFor="let img of item.productId.productImages"
+           [src]="img"
+           alt="Product Image"
+           class="img-thumbnail me-2 mb-2"
+           style="width: 80px; height: 80px; object-fit: cover;">
+    </div>
+  </li>
+</ul>
+
 
   <div class="mb-3">
     <label for="statusSelect" class="form-label">Update Status</label>
