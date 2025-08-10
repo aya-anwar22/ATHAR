@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginData } from '../../../core/models/auth.model';
 
@@ -20,11 +20,22 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required])
   });
 
-  errorMessage: string | null = null; // ➜ دي هتظهر الرسالة
+  errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // عرض رسالة لو الجلسة انتهت
+    this.route.queryParams.subscribe(params => {
+      if (params['sessionExpired']) {
+        this.errorMessage = 'Your session has expired. Please log in again.';
+      }
+    });
+  }
 
   onSubmit() {
     if (this.loginForm.valid) {
@@ -42,7 +53,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('refreshToken', refreshToken);
 
-          this.errorMessage = null; // ✅ لو نجح امسح الرسالة
+          this.errorMessage = null;
 
           const role = this.authService.getRole();
 
@@ -54,7 +65,7 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => {
           console.error('Login error:', err);
-          this.errorMessage = 'Invalid email or password. Please try again.'; // ✅ هنا الرسالة
+          this.errorMessage = 'Invalid email or password. Please try again.';
         }
       });
     } else {
@@ -66,4 +77,3 @@ export class LoginComponent implements OnInit {
     window.location.href = 'http://localhost:3000/v1/auth/google';
   }
 }
-

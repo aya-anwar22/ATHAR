@@ -39,13 +39,13 @@ getRefreshToken(): string | null {
   return localStorage.getItem(this.REFRESH_TOKEN_KEY);
 }
 
-refreshToken(): Observable<{ accessToken: string }> {
-  const refreshToken = this.getRefreshToken();
+refreshToken(data: { refreshToken: string }) {
   return this.http.post<{ accessToken: string }>(
-    `${this.apiUrl}/refresh-token`,
-    { refreshToken }
+    `${this.apiUrl}/auth/refresh`,
+    data
   );
 }
+
   private myUser = new BehaviorSubject<IUser | null>(null);
   public user$ = this.myUser.asObservable();
 
