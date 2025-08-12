@@ -36,7 +36,7 @@ const dashboardRoutes = require('./Routers/dashboardRoutes');
 
 const contactRouter = require('./Routers/contactRouter')
 const FeedbackProductRouter = require('./Routers/FeedbackProductRouter')
-
+const bannerRouter = require('./Routers/bannerRoutes')
 const globalError = require('./middleWare/globalError')
 const ApiError = require('./utils/apiError')
 app.use('/v1/auth', authRouter);
@@ -50,6 +50,7 @@ app.use('/api/v1/about', aboutRouter);
 app.use('/api/v1/contact', contactRouter)
 app.use('/api/v1/dashboard', dashboardRoutes)
 app.use('/api/v1/feedback', FeedbackProductRouter)
+app.use('/api/v1/banner', bannerRouter)
 
 dbConnection()
 //middleWare 
