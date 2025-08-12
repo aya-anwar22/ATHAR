@@ -1,0 +1,74 @@
+<div class="admin-banner-container">
+  <!-- Notification Message -->
+  <div class="notification-wrapper" *ngIf="showMessage">
+    <div class="notification {{messageType}}">
+      <div class="notification-content">
+        <i class="icon" [ngClass]="{
+          'fas fa-check-circle': messageType === 'success',
+          'fas fa-exclamation-circle': messageType === 'error',
+          'fas fa-info-circle': messageType === 'info'
+        }"></i>
+        <span>{{message}}</span>
+      </div>
+      <div class="progress-bar" *ngIf="messageType === 'info'">
+        <div class="progress" [style.width.%]="progressValue"></div>
+      </div>
+      <button class="close-btn" (click)="hideMessage()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showConfirmModal">
+    <div class="confirmation-modal">
+      <div class="modal-header">
+        <h3>Confirm Action</h3>
+        <button class="close-btn" (click)="showConfirmModal = false">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{confirmMessage}}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn cancel" (click)="showConfirmModal = false">Cancel</button>
+        <button class="btn confirm" (click)="confirmActionHandler()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-section">
+    <h2>Manage Banners</h2>
+    <div class="upload-section">
+      <div class="file-upload-wrapper">
+        <label class="file-upload-label">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>{{selectedFile ? 'Change Banner Image' : 'Choose Banner Image'}}</span>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
+        </label>
+      </div>
+      <button class="add-btn" (click)="addBanner()" [disabled]="!selectedFile">
+        <i class="fas fa-plus"></i> Add Banner
+      </button>
+    </div>
+  </div>
+
+  <div class="banners-grid">
+    <div *ngFor="let banner of banners" class="banner-card">
+      <div class="banner-image">
+        <img [src]="banner.imageUrl" alt="Banner" onerror="this.src='assets/images/default-banner.jpg'">
+      </div>
+      <div class="banner-actions">
+        <button class="delete-btn" (click)="promptDelete(banner._id)" title="Delete">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="banners.length === 0">
+      <i class="fas fa-images"></i>
+      <p>No banners found</p>
+    </div>
+  </div>
+</div>

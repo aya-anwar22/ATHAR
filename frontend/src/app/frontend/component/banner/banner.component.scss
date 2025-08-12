@@ -1,7 +1,7 @@
 // Hero Carousel Styles
 #heroCarousel {
   width: 100%;
-  height: 80vh;
+  max-height: 80vh;
   overflow: hidden;
   position: relative;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -13,9 +13,28 @@
       height: 100%;
       transition: transform 0.6s ease-in-out;
       
+      .image-container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,0.05);
+        
+        img {
+          max-height: 100%;
+          max-width: 100%;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          margin: 0 auto;
+        }
+      }
+      
       .hero {
         height: 100%;
         padding: 0 5%;
+        display: flex;
+        align-items: center;
         
         .content-area {
           width: 45%;
@@ -55,9 +74,13 @@
         .image-area {
           width: 50%;
           position: relative;
+          height: 100%;
+          display: flex;
+          align-items: center;
           
           .hero-image {
             max-height: 70vh;
+            max-width: 100%;
             object-fit: contain;
             animation: float 3s ease-in-out infinite;
           }

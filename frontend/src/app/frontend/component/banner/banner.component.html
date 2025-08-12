@@ -1,0 +1,41 @@
+<section *ngIf="banners.length > 0" id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+
+  <!-- Indicators -->
+  <div class="carousel-indicators">
+    <button *ngFor="let banner of banners; let i = index"
+            type="button"
+            data-bs-target="#heroCarousel"
+            [attr.data-bs-slide-to]="i"
+            [class.active]="i === 0">
+    </button>
+  </div>
+
+  <!-- Slides -->
+  <div class="carousel-inner">
+  <div *ngFor="let banner of banners; let i = index"
+       class="carousel-item"
+       [class.active]="i === 0">
+    <div class="image-container">
+      <img [src]="banner.imageUrl"
+           class="d-block w-100"
+           alt="Banner {{i + 1}}">
+    </div>
+  </div>
+</div>
+
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+
+</section>
+
+<!-- If no banners -->
+<div *ngIf="banners.length === 0" class="text-center py-5">
+  <p>No banners available.</p>
+</div>

@@ -142,6 +142,12 @@ export const routes: Routes = [
           import('./admin/components/dashboard/dashboard.component').then(m => m.DashboardComponent),
       },
 
+      {
+        path: 'banner',
+        loadComponent: () =>
+          import('./admin/components/banner-admin/banner-admin.component').then(m => m.BannerAdminComponent),
+      },
+
     {
         path: 'profile',
         loadComponent: () =>
