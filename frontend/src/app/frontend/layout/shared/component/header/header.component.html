@@ -1,90 +1,104 @@
-<header class="top-header border-bottom">
+<header class="top-header">
   <div class="container">
     <div class="header-content">
       <!-- Logo Section -->
-      <!-- <div class="logo">
+      <div class="logo">
         <a href="/" class="logo-link">
-<img src="./assets/logo.jpg" alt="Brand Name" />
+          <img src="./assets/logo.jpg" alt="Brand Name" class="logo-img" />
         </a>
-      </div> -->
+      </div>
 
- 
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+
       <!-- Main Navigation -->
-      <nav class="main-nav">
+      <nav class="main-nav" [class.active]="isMobileMenuOpen">
         <ul class="nav-list">
           <li class="nav-item">
-            <a href="/" class="nav-link">
+            <a href="/" class="nav-link" routerLink="/" routerLinkActive="active">
               <i class="fas fa-home"></i>
               <span class="link-text">Home</span>
             </a>
           </li>
           
           <li class="nav-item">
-            <a href="/products" class="nav-link">
-              <i class="fas fa-tshirt"></i>
+            <a href="/products" class="nav-link" routerLink="/products" routerLinkActive="active">
+              <i class="fas fa-shopping-bag"></i>
               <span class="link-text">Shop</span>
             </a>
           </li>
 
-
           <li class="nav-item">
-            <a href="/collections" class="nav-link">
-              <i class="fas fa-tshirt"></i>
+            <a href="/collections" class="nav-link" routerLink="/collections" routerLinkActive="active">
+              <i class="fas fa-layer-group"></i>
               <span class="link-text">Collections</span>
             </a>
           </li>
           
           <li class="nav-item">
-            <a href="/testimonials" class="nav-link">
+            <a href="/testimonials" class="nav-link" routerLink="/testimonials" routerLinkActive="active">
               <i class="fas fa-star"></i>
               <span class="link-text">Testimonials</span>
             </a>
           </li>
           
           <li class="nav-item">
-            <a href="/about" class="nav-link">
+            <a href="/about" class="nav-link" routerLink="/about" routerLinkActive="active">
               <i class="fas fa-info-circle"></i>
               <span class="link-text">About</span>
             </a>
           </li>
           
           <li class="nav-item">
-            <a href="/contact-us" class="nav-link">
-              <i class="fas fa-phone"></i>
+            <a href="/contact-us" class="nav-link" routerLink="/contact-us" routerLinkActive="active">
+              <i class="fas fa-envelope"></i>
               <span class="link-text">Contact</span>
             </a>
           </li>
 
           <!-- Shopping Cart (visible only when logged in) -->
           <li class="nav-item cart-item" *ngIf="userName">
-  <a href="/cart" class="nav-link cart-link">
-    <i class="fas fa-shopping-cart"></i>
-    <span class="link-text">Cart</span>
-    <span class="cart-badge" id="cart-count-nav" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
-  </a>
-</li>
-
-
-          <li class="nav-item cart-item" *ngIf="userName">
-  <a href="/orders" class="nav-link cart-link">
-    <i class="fas fa-shopping-cart"></i>
-    <span class="link-text">Your Order</span>
-    <span class="cart-badge" id="cart-count-nav" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
-  </a>
-</li>
-
-
-          <!-- Profile (visible only when logged in) -->
-          <li class="nav-item profile-item" *ngIf="userName">
-            <a href="/profile" class="nav-link">
-              <i class="fas fa-user-circle"></i>
-              <span class="link-text">{{ userName }}</span>
+            <a href="/cart" class="nav-link cart-link" routerLink="/cart" routerLinkActive="active">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="link-text">Cart</span>
+              <span class="cart-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
             </a>
+          </li>
+
+          <!-- Orders (visible only when logged in) -->
+          <li class="nav-item order-item" *ngIf="userName">
+            <a href="/orders" class="nav-link order-link" routerLink="/orders" routerLinkActive="active">
+              <i class="fas fa-clipboard-list"></i>
+              <span class="link-text">Orders</span>
+            </a>
+          </li>
+
+          <!-- Profile Dropdown (visible only when logged in) -->
+          <li class="nav-item profile-item dropdown" *ngIf="userName">
+            <a href="javascript:void(0)" class="nav-link dropdown-toggle" (click)="toggleProfileDropdown()">
+              <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <span class="link-text">{{ userName }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <div class="dropdown-menu" [class.show]="isProfileDropdownOpen">
+              <a href="/profile" class="dropdown-item" routerLink="/profile">
+                <i class="fas fa-user"></i> Profile
+              </a>
+
+              <div class="dropdown-divider"></div>
+              <a href="javascript:void(0)" class="dropdown-item" (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </div>
           </li>
 
           <!-- Login (visible only when not logged in) -->
           <li class="nav-item" *ngIf="!userName">
-            <a href="/login" class="nav-link">
+            <a href="/login" class="nav-link login-link" routerLink="/login" routerLinkActive="active">
               <i class="fas fa-sign-in-alt"></i>
               <span class="link-text">Login</span>
             </a>
