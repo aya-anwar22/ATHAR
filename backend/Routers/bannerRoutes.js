@@ -10,7 +10,9 @@ router.post('/', authenticate,
   authorize('admin'),
   upload.single('bannerImage'), bannerController.createBanner);  
 
-router.get('/', bannerController.getBanners);    
+router.get('/', bannerController.getBanners);   
+router.get('/:id', bannerController.getBannerById);
+
 router.delete('/:id', authenticate,
   authorize('admin'),
   upload.single('collectionsImage'),  bannerController.deleteBanner); 
