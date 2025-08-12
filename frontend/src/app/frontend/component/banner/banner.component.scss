@@ -1,41 +1,25 @@
-// Hero Carousel Styles
 #heroCarousel {
   width: 100%;
-  max-height: 80vh;
-  overflow: hidden;
+  height: 80vh;
   position: relative;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  
+  overflow: hidden;
+  background: #f8f9fa;
+
   .carousel-inner {
     height: 100%;
-    
+    width: 100%;
+
     .carousel-item {
       height: 100%;
-      transition: transform 0.6s ease-in-out;
-      
-      .image-container {
+      width: 100%;
+
+      .hero-container {
         height: 100%;
         display: flex;
         align-items: center;
-        justify-content: center;
-        background-color: rgba(0,0,0,0.05);
-        
-        img {
-          max-height: 100%;
-          max-width: 100%;
-          width: auto;
-          height: auto;
-          object-fit: contain;
-          margin: 0 auto;
-        }
-      }
-      
-      .hero {
-        height: 100%;
+        justify-content: space-between;
         padding: 0 5%;
-        display: flex;
-        align-items: center;
-        
+
         .content-area {
           width: 45%;
           padding-right: 2rem;
@@ -70,21 +54,23 @@
             }
           }
         }
-        
+
         .image-area {
           width: 50%;
-          position: relative;
           height: 100%;
+          position: relative;
           display: flex;
           align-items: center;
-          
+          justify-content: center;
+
           .hero-image {
-            max-height: 70vh;
+            max-height: 100%;
             max-width: 100%;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            animation: float 3s ease-in-out infinite;
           }
-          
+
           .offer-text {
             position: absolute;
             top: 20%;
@@ -118,7 +104,7 @@
       }
     }
   }
-  
+
   .carousel-control-prev,
   .carousel-control-next {
     width: 5%;
@@ -141,7 +127,7 @@
       }
     }
   }
-  
+
   .carousel-indicators {
     bottom: 20px;
     
@@ -163,17 +149,11 @@
   }
 }
 
-// Animations
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+.empty-banners {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #6c757d;
 }
 
 @keyframes pulse {
@@ -193,7 +173,7 @@
   #heroCarousel {
     height: 70vh;
     
-    .carousel-inner .carousel-item .hero {
+    .carousel-inner .carousel-item .hero-container {
       .content-area {
         .hero-title {
           font-size: 3rem;
@@ -210,7 +190,7 @@
   #heroCarousel {
     height: 60vh;
     
-    .carousel-inner .carousel-item .hero {
+    .carousel-inner .carousel-item .hero-container {
       flex-direction: column;
       text-align: center;
       padding-top: 3rem;
@@ -241,7 +221,7 @@
   #heroCarousel {
     height: 50vh;
     
-    .carousel-inner .carousel-item .hero {
+    .carousel-inner .carousel-item .hero-container {
       .content-area {
         .hero-title {
           font-size: 2rem;
@@ -271,9 +251,9 @@
 
 @media (max-width: 576px) {
   #heroCarousel {
-    height: 45vh;
+    height: 40vh;
     
-    .carousel-inner .carousel-item .hero {
+    .carousel-inner .carousel-item .hero-container {
       .content-area {
         .hero-title {
           font-size: 1.8rem;
